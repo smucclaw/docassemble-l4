@@ -2,7 +2,7 @@ include:
   - docassemble.scasp:DAScasp.yml
 ---
 modules:
-  - docassemble.datatypes
+  - docassemble.datatypes.DADataType
 ---
 generic object: DADTBoolean
 question: |
