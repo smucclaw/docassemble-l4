@@ -110,12 +110,20 @@ fields:
 ---
 generic object: DAList
 question: |
+  % if x.any != "":
+  ${ x.any }
+  % else:
   Is there a ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 yesno: x.there_are_any 
 ---
 generic object: DAList
 question: |
+  % if x.another != "":
+  ${ x.another }
+  % else:
   Is there another ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 yesno: x.there_is_another
 ---
 generic object: DADTEnum
