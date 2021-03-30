@@ -6,7 +6,11 @@ modules:
 ---
 generic object: DADTBoolean
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   Is ${ x.self_value } true${ (" for " + x.parent_value) if x.parent_value else "" }?
+  % endif
 yesno: x.value
 ---
 generic object: DADTContinue
