@@ -15,59 +15,95 @@ yesno: x.value
 ---
 generic object: DADTContinue
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   ${ x.self_value }${ (" for " + x.parent_value) if x.parent_value else "" }?
+  % endif
 field: x.value
 ---
 generic object: DADTNumber
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   What is ${ x.self_value }${ (" for " + x.parent_value) if x.parent_value else "" }?
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: number
 ---
 generic object: DADTEmail
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   What is ${ x.self_value } (an email address)${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: email
 ---
 generic object: DADTString
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   What is ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: text
 ---
 generic object: DADTDate
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   What is ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: date
 ---
 generic object: DADTTime
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   What is ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: time
 ---
 generic object: DADTDateTime
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   What is ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: datetime
 ---
 generic object: DADTYesNoMaybe
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   Is ${ x.self_value } true${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 yesnomaybe: x.value
 ---
 generic object: DADTFile
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   Upload a file ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: file
@@ -84,7 +120,11 @@ yesno: x.there_is_another
 ---
 generic object: DADTEnum
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   Select ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: radio
@@ -93,7 +133,11 @@ fields:
 ---
 generic object: DADTObjectRef
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   Select ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: object
