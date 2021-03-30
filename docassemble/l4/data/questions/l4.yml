@@ -6,81 +6,133 @@ modules:
 ---
 generic object: DADTBoolean
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   Is ${ x.self_value } true${ (" for " + x.parent_value) if x.parent_value else "" }?
+  % endif
 yesno: x.value
 ---
 generic object: DADTContinue
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   ${ x.self_value }${ (" for " + x.parent_value) if x.parent_value else "" }?
+  % endif
 field: x.value
 ---
 generic object: DADTNumber
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   What is ${ x.self_value }${ (" for " + x.parent_value) if x.parent_value else "" }?
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: number
 ---
 generic object: DADTEmail
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   What is ${ x.self_value } (an email address)${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: email
 ---
 generic object: DADTString
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   What is ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: text
 ---
 generic object: DADTDate
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   What is ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: date
 ---
 generic object: DADTTime
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   What is ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: time
 ---
 generic object: DADTDateTime
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   What is ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: datetime
 ---
 generic object: DADTYesNoMaybe
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   Is ${ x.self_value } true${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 yesnomaybe: x.value
 ---
 generic object: DADTFile
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   Upload a file ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: file
 ---
 generic object: DAList
 question: |
+  % if x.any != "":
+  ${ x.any }
+  % else:
   Is there a ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 yesno: x.there_are_any 
 ---
 generic object: DAList
 question: |
+  % if x.another != "":
+  ${ x.another }
+  % else:
   Is there another ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 yesno: x.there_is_another
 ---
 generic object: DADTEnum
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   Select ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: radio
@@ -89,7 +141,11 @@ fields:
 ---
 generic object: DADTObjectRef
 question: |
+  % if x.ask != "":
+  ${ x.ask }
+  % else:
   Select ${ x.self_value }${ " for " + x.parent_value if x.parent_value else "" }?
+  % endif
 fields:
   - ${ x.self_value }: x.value
     datatype: object
