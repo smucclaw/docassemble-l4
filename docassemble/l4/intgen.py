@@ -309,8 +309,8 @@ def make_complete_code_block(input_object,root=""):
         new_root = root + dot + input_object['name']
     if is_list(input_object):
         output += "code: |\n"
-        output += "  if \"" + new_root + ".value\" in subagenda:\n"
-        output += "    " + new_root + ".value\n"
+        #output += "  if \"" + new_root + ".value\" in subagenda:\n"
+        output += "  " + new_root + ".value\n"
         if 'attributes' in input_object:
             for a in input_object['attributes']:
                 if is_list(a):
@@ -500,3 +500,6 @@ def find_relevant(data_element,relevant_preds,parent="",list_level=0,root=True):
     return (output,suboutput)
 
 
+# TODO: Lists that are being collected are not having their element values collected
+# unless and until they need to be displayed. Something needs to be added to the subagenda,
+# or we need to assume that the .value of a list element is always required? I'd say the latter?
