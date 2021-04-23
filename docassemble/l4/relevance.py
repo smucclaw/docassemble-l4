@@ -20,7 +20,7 @@ import re
 
 def relevant_to(scasp_code,query):
     dg = build_graph(scasp_code)
-    # TODO: First, strip legally_holds or according_to from query, so it is
+    # First, strip legally_holds or according_to from query, so it is
     # searching for a term that exists in the graph.
     query_parse = sp.term.parseString(query,True)
     if query_parse['term']['functor']['base atom'] in ['according_to','legally_holds']:
