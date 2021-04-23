@@ -443,15 +443,17 @@ def generate_agendas(data_structure,sCASP):
     # an encoding that matches one of the relevant predicates, mark it and all of its parents
     # as a relevant data element.
     relevant_data_elements = set()
+    for d in data_structure['data']:
+        relevant_data_elements.add(find_relevant(d,relevant_preds))
 
-    output = "---\n"
-    output += "variable name: agenda\n"
+    output = "variable name: agenda\n"
     output += "data:\n"
     # Add agenda here
     # TODO: For each root element in the data structure, if it is a relevant data element, add it
     # to the agenda.
     for d in data_structure['data']:
-        output += "  - " + d['name'] + ".gather()\n"
+        if d['name'] in relevant_data_elements:
+            output += "  - " + d['name'] + ".gather()\n" #TODO Change to .value as appropriate.
     output += "---\n"
     output += "variable name: subagenda\n"
     output += "data:\n"
@@ -462,4 +464,15 @@ def generate_agendas(data_structure,sCASP):
     output += "---\n"
 
     # TODO: Use the sub-agenda in deciding whether to collect attributes (after it exists)
+    return output
+
+def find_relevant(data_element,relevant_preds):
+    output = set()
+    if 'encodings' in data_element:
+        for e in data_element['encodings']:
+            if docassemble.l4.relevance.generalize(e) in relevant_preds:
+                output.add(data_element['name'])
+    if 'attributes' in data_element:
+        for a in data_element['attributes']:
+            output.add(find_relevant(a,relevant_preds))
     return output
