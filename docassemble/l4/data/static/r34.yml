@@ -1,5 +1,5 @@
 rules: r34.pl
-query: legally_holds(Rule,must_not(Lawyer,accept,Position))
+query: must_not(Lawyer,accept,Position)
 data:
   - name: person
     type: String

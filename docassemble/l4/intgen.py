@@ -451,10 +451,11 @@ def generate_agendas(data_structure,sCASP):
     # TODO: For each root element in the data structure, if it is a relevant data element, add it
     # to the agenda.
     for d in data_structure['data']:
-        output += "  - " + d['name'] + ".gather()"
+        output += "  - " + d['name'] + ".gather()\n"
     output += "---\n"
     output += "variable name: subagenda\n"
     output += "data:\n"
+    output += "  - TEMP_NOTHING\n"
     # Add sub-agenda here
     # TODO: For each non-root element in the data structure, if it is a relevant data element, add it
     # to the sub-agenda.
