@@ -1,0 +1,462 @@
+rules: r34.pl
+query: legally_holds(Rule,must_not(Lawyer,accept,Position))
+data:
+  - name: person
+    type: String
+    any: Are there any people (who may also be legal practitioners, owners, etc.)?
+    another: Are there any more people?
+    ask: What is the name of the person?
+    minimum: 0
+  - name: legal_practice
+    type: String
+    any: Are there any legal practices?
+    another: Is there another legal practice?
+    ask: What is the name of the legal practice?
+    tell: the legal practice {X}
+    minimum: 0
+    encodings:
+      - law_practice(X)
+    attributes:
+    - name: joint_law_venture
+      ask: Is {Y} a joint law venture?
+      type: Boolean
+      encodings:
+        - joint_law_venture(Y)
+    - name: formal_law_alliance
+      type: Boolean
+      ask: Is {Y} a formal law alliance?
+      encodings: 
+        - formal_law_alliance(Y)
+    - name: foreign_law_practice
+      type: Boolean
+      ask: Is {Y} a foreign law practice?
+      encodings:
+        - foreign_law_practice(Y)
+    - name: jurisdiction
+      type: Enum
+      ask: What is the jurisdiction of {Y}?
+      options:
+        singapore: Singapore
+        other: Somewhere Else
+      encodings:
+        - jurisdiction(Y,X)
+    - name: legal_practitioner
+      type: Object
+      source: person
+      minimum: 0
+      any: Are there any legal practitioners in {Y}?
+      another: Is there another legal practice in {Y}?
+      ask: Who is a legal practitioner in {Y}?
+      tell: the legal practitioner {X} in {Y}
+      encodings:
+        - legal_practitioner(X)
+        - in(X,Y)
+      attributes:
+        - name: locum_solicitor
+          ask: Is {Y} a locum solicitor?
+          type: Boolean
+          encodings:
+            - locum_solicitor(Y)
+        - name: primary_occupation
+          type: Enum
+          ask: What is the primary occupation of {Y}?
+          encodings:
+            - primary_occupation_of(Y,X)
+          options:
+            practicing_as_a_lawyer: Practicing as a lawyer
+            something_else: Something Else
+    - name: position
+      type: String
+      minimum: 0
+      any: Are there any positions in {Y}?
+      another: Is there another position in {Y}?
+      ask: What is the position in {Y} called?
+      tell: the position {X} in {Y}
+      encodings:
+        - in(X,Y)
+        - position(X)
+      attributes:
+        - name: accepted_as_representative_of_parent_practice
+          type: Boolean
+          ask: Is {Y} accepted as a representative of a parent legal practice?
+          encodings:
+            - accepts_position_as_representative(_,Y,_)
+        - name: associated_with
+          type: Object
+          any: Is {Y} associated with any businesses?
+          another: Is {Y} associate with any othr businesses?
+          ask: What business is {Y} associated with?
+          source: business
+          minimum: 0
+          encodings:
+            - associated_with(Y,X)
+        - name: entitles_holder_as_executive
+          ask: Does {Y} entitle the holder as an executive?
+          type: Boolean
+          encodings:
+            - entitles_holder(Y)
+        - name: independent_director
+          type: Boolean
+          ask: Is {Y} an independent directorship?
+          encodings:
+            - independent_director(Y)
+        - name: non_executive_director
+          type: Boolean
+          ask: Is {Y} a non-executive directorship?
+          encodings:
+            - non_executive_director(Y)
+        - name: materially_interferes_with_practicing_as_a_lawyer_for
+          type: Object
+          any: Does {Y} materially interfere with practicing as a lawyer for anyone?
+          another: Does {Y} materially interfere with practicing as a lawyer for anyone else?
+          ask: For whom does {Y} materially interfere with practicing as a lawyer?
+          source: person
+          minimum: 0
+          encodings:
+            - materially_interferes_with(Y,practicing_as_a_lawyer,X)
+        - name: materially_interferes_with_availability_of
+          type: Object
+          any: Does {Y} materially interfere with availability for anyone?
+          another: Does {Y} materially interfere with availability for anyone else?
+          ask: For whom does {Y} materially interfere with availability?
+          source: person
+          minimum: 0
+          encodings:
+            - materially_interferes_with(Y,availability,X)
+        - name: materially_interferes_with_representation_of_clients_for
+          type: Object
+          any: Does {Y} materially interfere with the representation of legal clients for anyone?
+          another: Does {Y} materially interfere with the representation of legal clients for anyone else?
+          ask: For whom does {Y} materially interfere with the representation of legal clients?
+          source: person
+          minimum: 0
+          encodings:
+            - materially_interferes_with(Y,representation,X)
+  - name: organization
+    type: String
+    any: Are there any organizations?
+    another: Is there another organization?
+    ask: What is the name of the organization?
+    tell: the organization named {X}
+    minimum: 0
+    attributes:
+      - name: carries_on
+        type: Object
+        any: Does {Y} carry on any businesses?
+        another: Does {Y} carry on any other businesses?
+        ask: What business does {Y} carry on?
+        source: business
+        minimum: 0
+        encodings:
+          - carries_on(Y,X)
+      - name: provides
+        type: Object
+        any: Does {Y} provide any services?
+        another: Does {Y} provide any other services?
+        ask: What service does {Y} provide?
+        source: service
+        minimum: 0
+        encodings:
+          - provides(Y,X)
+      - name: listed_in_third_schedule
+        type: Boolean
+        ask: Is {Y} an institution listed in the third schedule?
+        encodings:
+          - in_third_schedule(Y)
+          - institution(Y)
+      - name: position
+        type: String
+        any: Are there any positions in {Y}?
+        another: Are there any other positions in {Y}?
+        ask: What is the name of the position in {Y}?
+        tell: the position {X} in {Y}
+        minimum: 0
+        encodings:
+          - in(X,Y)
+          - position(X)
+        attributes:
+          - name: associated_with
+            type: Object
+            any: Is {Y} associated with any businesses?
+            another: Is {Y} associated with any other businesses?
+            ask: What business is {Y} associated with?
+            source: business
+            minimum: 0
+            encodings:
+              - associated_with(Y,X)
+          - name: independent_director
+            type: Boolean
+            ask: Is {Y} an independent directorship?
+            encodings:
+              - independent_director(Y)
+          - name: non_executive_director
+            type: Boolean
+            ask: Is {Y} a non-executive directorship?
+            encodings:
+              - non_executive_director(Y)
+          - name: entitles_holder_as_executive
+            type: Boolean
+            ask: Does {Y} entitle the holder as an executive?
+            encodings:
+              - entitles_holder(Y)
+          - name: materially_interferes_with_practicing_as_a_lawyer_for
+            type: Object
+            any: Does {Y} materially interfere with practicing as a lawyer for anyone?
+            another: Does {Y} materially interfere with practicing as a lawyer for anyone else?
+            ask: For whom does {Y} materially interfere with practicing as a lawyer?
+            source: person
+            minimum: 0
+            encodings:
+              - materially_interferes_with(Y,practicing_as_a_lawyer,X)
+          - name: materially_interferes_with_availability_of
+            type: Object
+            any: Does {Y} materially interfere with availability for anyone?
+            another: Does {Y} materially interfere with availability for anyone else?
+            ask: For whom does {Y} materially interfere with availability?
+            source: person
+            minimum: 0
+            encodings:
+              - materially_interferes_with(Y,availability,X)
+          - name: materially_interferes_with_representation_of_clients_for
+            type: Object
+            any: Does {Y} materially interfere with the representation of legal clients for anyone?
+            another: Does {Y} materially interfere with the representation of legal clients for anyone else?
+            ask: For whom does {Y} materially interfere with the representation of legal clients?
+            source: person
+            minimum: 0
+            encodings:
+              - materially_interferes_with(Y,representation,X)
+      - name: company
+        type: Boolean
+        ask: Is {Y} a company?
+        encodings:
+          - company(Y)
+      - name: corporation
+        type: Boolean
+        ask: Is {Y} a corporation?
+        encodings:
+          - corporation(Y)
+      - name: partnership
+        type: Boolean
+        ask: Is {Y} a partnership?
+        encodings:
+          - partnership(Y)
+      - name: llp
+        type: Boolean
+        ask: Is {Y} a limited liability partnership?
+        encodings:
+          - llp(Y)
+      - name: sole_proprietorship
+        type: Boolean
+        ask: Is {Y} a sole proprietorship?
+        encodings:
+          - sole_proprietorship(Y)
+      - name: business_trust
+        type: Boolean
+        ask: Is {Y} a business trust?
+        encodings:
+          - business_trust(Y)
+      - name: beneficial_owner
+        type: Object
+        any: Does {Y} have any beneficial owners?
+        another: Does {Y} have another beneficial owner?
+        ask: Who is the beneficial owner of {Y}?
+        minimum: 0
+        source: person
+        encodings:
+          - beneficial_owner_of(X,Y)
+      - name: legal_owner
+        type: Object
+        any: Does {Y} have any legal owners?
+        another: Does {Y} have another legal owner?
+        ask: Who is the legal owner of {Y}?
+        minimum: 0
+        source: person
+        encodings:
+          - legal_owner_of(X,Y)
+      - name: partner
+        type: Object
+        any: Does {Y} have any partners?
+        another: Does {Y} have another partner?
+        ask: Who is the partner in {Y}?
+        source: person
+        minimum: 0
+        encodings:
+          - partner_of(X,Y)
+      - name: sole_proprietor
+        type: Object
+        any: Does {Y} have a sole proprietor?
+        ask: Who is the sole proprietor of {Y}?
+        source: person
+        minimum: 0
+        maximum: 1
+        encodings:
+          - sole_proprietor_of(X,Y)
+      - name: director
+        type: Object
+        source: person
+        any: Are there any directors in {Y}?
+        another: Are there any other directors in {Y}?
+        ask: Who is a director in {Y}?
+        minimum: 0
+        encodings:
+          - director_of(X,Y)
+  - name: business
+    type: String
+    any: Are there any businesses?
+    another: Is there another business?
+    ask: What is the business called?
+    tell: the business called {X}
+    minimum: 0
+    encodings:
+      - business(X)
+    attributes:
+      - name: detracts_from_dignity_of_legal_profession
+        ask: Does {Y} detract from the dignity of the legal profession?
+        type: Boolean
+        encodings:
+          - detracts_from_dignity_of_legal_profession(Y)
+      - name: incompatible_with_dignity_of_legal_profession
+        ask: Is {Y} incompatible with the dignity of the legal profession?
+        type: Boolean
+        encodings:
+          - incompatible_dignity_of_legal_profession(Y)
+      - name: derogates_from_dignity_of_legal_profession
+        ask: Does {Y} derogate from the dignity of the legal profession?
+        type: Boolean
+        encodings:
+          - derogates_from_dignity_of_legal_profession(Y)
+      - name: likely_to_unfairly_attract_business_in_the_practice_of_law
+        ask: Is {Y} likely to unfairly attract business in the practice of law?
+        type: Boolean
+        encodings:
+          - unfair(Y)
+      - name: set_out_in_the_first_schedule
+        ask: Is {Y} set out in the first schedule
+        type: Boolean
+        encodings:
+          - described_in_first_schedule(Y)
+      - name: prohibited_business
+        ask: Is {Y} a prohibited business?
+        type: Boolean
+        encodings:
+          - prohibited_business(Y)
+      - name: trade
+        ask: Is {Y} a trade?
+        type: Boolean
+        encodings:
+          - trade(Y)
+      - name: calling
+        ask: Is {Y} a calling?
+        type: Boolean
+        encodings:
+          - calling(Y)
+      - name: for_profit
+        ask: Is {Y} for profit?
+        type: Boolean
+        encodings:
+          - for_profit(Y)
+      - name: in_singapore
+        ask: Is {Y} in Singapore?
+        type: Boolean
+        encodings:
+          - in(Y,singapore)
+  - name: service
+    type: String
+    any: Are there any services?
+    another: Is there another service?
+    ask: What is the service called?
+    tell: the service called {X}
+    minimum: 0
+    encodings:
+      - service(X)
+    attributes:
+      - name: legal
+        type: Boolean
+        ask: Is {Y} a legal service?
+        encodings:
+          - legal_service(Y)
+      - name: law_related
+        type: Boolean
+        ask: is {Y} a law-related service?
+        encodings:
+          - law_related_service(Y)
+      - name: listed_in_fourth_schedule
+        type: Boolean
+        ask: Is {Y} listed in the fourth schedule?
+        encodings:
+          - listed_in_fourth_schedule
+  - name: all_conditions_of_second_schedule_satisfied
+    type: Boolean
+    ask: Are all the conditions of the second schedule satisfied?
+    encodings:
+      - conditions_of_second_schedule_satisfied
+terms:
+  - r34_1: |
+      [34](https://). Executive appointments
+      
+      34.—(1)  A legal practitioner must not accept any executive appointment associated with 
+      any of the following businesses:
+  - r34_1_a: |
+      (a)	any business which detracts from, is incompatible with, or derogates from the dignity of,
+      the legal profession;
+  - r34_1_c: |
+      (c)	any business which is likely to unfairly attract business in the practice of law;
+  - r34_1_d: |
+      (d)	any business which involves the sharing of the legal practitioner’s fees with, 
+      or the payment of a commission to, any unauthorised person for legal work performed 
+      by the legal practitioner;
+  - r34_1_e: |
+      (e)	any business set out in the First Schedule;
+  - r34_1_f: |
+      (f)	any business which is prohibited by —
+      (i)	the Act;
+      (ii)	these Rules or any other subsidiary legislation made under the Act;
+      (iii)	any practice directions, guidance notes and rulings issued under section 71(6) of the Act; or
+      (iv)	any practice directions, guidance notes and rulings (relating to professional practice,
+      etiquette, conduct and discipline) issued by the Council or the Society.
+  - r34_1_b: |
+      1A (to place it between 1 and 2): A legal practitioner must not accept any executive appointment that:
+      materially interferes with —
+      (i)	the legal practitioner’s primary occupation of practising as a lawyer;
+      (ii)	the legal practitioner’s availability to those who may seek the legal practitioner’s 
+      services as a lawyer; or
+      (iii)	the representation of the legal practitioner’s clients.
+  - r34_2_a: |
+      (2)  Subject to paragraph (1), a legal practitioner in a Singapore law practice 
+      (called in this paragraph the main practice) may accept an executive appointment 
+      in another Singapore law practice (called in this paragraph the related practice), 
+      if the related practice is connected to the main practice in either of the following ways:
+      (a)	every legal or beneficial owner of the related practice is the sole proprietor, 
+      or a partner or director, of the main practice;
+  - r34_2_b: |
+      (b)	the legal practitioner accepts the executive appointment as a representative 
+      of the main practice in the related practice, and the involvement of the main practice 
+      in the related practice is not prohibited by any of the following:
+      (i)	the Act;
+      (ii)	these Rules or any other subsidiary legislation made under the Act;
+      (iii)	any practice directions, guidance notes and rulings issued under section 71(6) of the Act;
+      (iv)	any practice directions, guidance notes and rulings (relating to professional practice,
+      etiquette, conduct and discipline) issued by the Council or the Society.
+  - r34_3: |
+      (3)  Subject to paragraph (1), a legal practitioner may accept an executive appointment 
+      in a business entity which provides law-related services.
+  - r34_4: |
+      (4)  Subject to paragraph (1), a legal practitioner (not being a locum solicitor) may 
+      accept an executive appointment in a business entity which does not provide any 
+      legal services or law-related services, if all of the conditions set out in the 
+      Second Schedule are satisfied.
+  - r34_5: |
+      (5)  Despite paragraph (1)(b), but subject to paragraph (1)(a) and (c) to (f), 
+      a locum solicitor may accept an executive appointment in a business entity which 
+      does not provide any legal services or law-related services, if all of the 
+      conditions set out in the Second Schedule are satisfied.
+  - r34_6_a: |
+      (6)  Except as provided in paragraphs (2) to (5) —
+      (a)	a legal practitioner in a Singapore law practice must not accept any executive 
+      appointment in another Singapore law practice; and
+  - r34_6_b: |
+      (b)	a legal practitioner must not accept any executive appointment in a business entity.
+  - r34_7: |
+      (7)  To avoid doubt, nothing in this rule prohibits a legal practitioner 
+      from accepting any appointment in any institution set out in the Third Schedule.
