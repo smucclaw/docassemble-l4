@@ -5,6 +5,7 @@
 # to our implemention of scasp+lpdat.
 
 import yaml
+import docassemble.l4.relevance
 
 def generate_interview(LExSIS_source,scasp_source):
     data_structure = yaml.load(LExSIS_source, Loader=yaml.FullLoader)
@@ -57,13 +58,6 @@ def generate_interview(LExSIS_source,scasp_source):
     for var in data_structure['data']:
         output += make_complete_code_block(var)
 
-    ## Generate Agenda Block (Temporarily Including Everything in The Root)
-    #output += "variable name: agenda\n"
-    #output += "data:\n"
-    #for var in data_structure['data']:
-    #    output += add_to_agenda(var)
-    #output += "---\n"
-
     ## Generate a Code Block That will Generate s(CASP) code.
     output += "code: |\n"
     output += "  import urllib\n"
@@ -78,9 +72,7 @@ def generate_interview(LExSIS_source,scasp_source):
         output += generate_parent_values(var)
 
     ## Generate Code For Agenda and Sub-Agenda
-    output += "code: |\n"
-    output += "  (agenda, subagenda) = generate_agendas(rules.slurp(),query,data_structure)\n"
-    output += "---\n"
+    output += generate_agendas(data_structure,scasp_source)
 
     ## Generate Mandatory Code Block That Will Prompt Collection
     output += "mandatory: True\n"
@@ -441,4 +433,32 @@ def is_list(input):
     # Otherwise
     return False
 
+def generate_agendas(data_structure,sCASP,query):
+    # Get the query from the LExSIS data
+    query = data_structure['query']
+    # Figure out what predicates are relevant leaves from the relevance module
+    relevant_preds = docassemble.l4.relevance.relevant_to(sCASP,query)
 
+    # TODO: Go through the data structure. If an item in the data structure has
+    # an encoding that matches one of the relevant predicates, mark it and all of its parents
+    # as a relevant data element.
+    relevant_data_elements = set()
+
+    output = "---\n"
+    output += "variable name: agenda\n"
+    output += "data:\n"
+    # Add agenda here
+    # TODO: For each root element in the data structure, if it is a relevant data element, add it
+    # to the agenda.
+    for d in data_structure['data']:
+        output += "  - " + d['name'] + ".gather()"
+    output += "---\n"
+    output += "variable name: subagenda\n"
+    output += "data:\n"
+    # Add sub-agenda here
+    # TODO: For each non-root element in the data structure, if it is a relevant data element, add it
+    # to the sub-agenda.
+    output += "---\n"
+
+    # TODO: Use the sub-agenda in deciding whether to collect attributes (after it exists)
+    return output
