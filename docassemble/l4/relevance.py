@@ -28,7 +28,7 @@ def relevant_to(scasp_code,query):
     return leaves
 
 def build_graph(scasp_code):
-    parse = sp.program.ParseString(scasp_code,True)
+    parse = sp.program.parseString(scasp_code,True)
     dg = nx.DiGraph()
     # Add all of the rules that conclude anything and their conclusions as nodes,
     # with an edge from the conclusion to the rule.
