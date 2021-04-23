@@ -6,7 +6,7 @@
 
 import yaml
 import docassemble.l4.relevance
-from docassemble.base.util import log
+from  docassemble.scasp.scaspparser import term
 
 def generate_interview(LExSIS_source,scasp_source):
     data_structure = yaml.load(LExSIS_source, Loader=yaml.FullLoader)
@@ -440,41 +440,46 @@ def generate_agendas(data_structure,sCASP):
     # Figure out what predicates are relevant leaves from the relevance module
     relevant_preds = docassemble.l4.relevance.relevant_to(sCASP,query)
 
-    # TODO: Go through the data structure. If an item in the data structure has
-    # an encoding that matches one of the relevant predicates, mark it and all of its parents
-    # as a relevant data element.
+    # Go through the data structure, and record the names of all data elements
+    # with relevant encodings or children with relevant encodings.
     relevant_data_elements = []
     for d in data_structure['data']:
         relevant_data_elements += find_relevant(d,relevant_preds)
-
+    
     output = "variable name: agenda\n"
     output += "data:\n"
     # Add agenda here
-    # TODO: For each root element in the data structure, if it is a relevant data element, add it
-    # to the agenda.
     for d in data_structure['data']:
         if d['name'] in relevant_data_elements:
-            output += "  - " + d['name'] + ".gather()\n" #TODO Change to .value as appropriate.
+            output += "  - " + d['name']
+            if is_list(d):
+                output += ".gather()\n"
+            else:
+                output += ".value()\n"
     output += "---\n"
     output += "variable name: subagenda\n"
     output += "data:\n"
-    output += "  - TEMP_NOTHING\n"
     # Add sub-agenda here
-    # TODO: For each non-root element in the data structure, if it is a relevant data element, add it
-    # to the sub-agenda.
+    for r in set(relevant_data_elements):
+        # TODO: Convert sub-agenda names into the names being used in the complete blocks.
+        output += "  - " + r + "\n"
     output += "---\n"
 
-    # TODO: Use the sub-agenda in deciding whether to collect attributes (after it exists)
     return output
 
 def find_relevant(data_element,relevant_preds):
     output = []
     if 'encodings' in data_element:
         for e in data_element['encodings']:
-            log('Generalizing ' + str(e), 'info')
-            if docassemble.l4.relevance.generalize(e) in relevant_preds:
-                output += data_element['name']
+            if docassemble.l4.relevance.generalize(term.parseString(e)) in relevant_preds:
+                output.append(data_element['name'])
     if 'attributes' in data_element:
         for a in data_element['attributes']:
-            output += find_relevant(a,relevant_preds)
+            new = find_relevant(a,relevant_preds)
+            if len(new):
+                output.append(data_element['name'])
+            output += new
+
     return output
+
+
