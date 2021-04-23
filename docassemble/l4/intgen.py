@@ -433,7 +433,7 @@ def is_list(input):
     # Otherwise
     return False
 
-def generate_agendas(data_structure,sCASP,query):
+def generate_agendas(data_structure,sCASP):
     # Get the query from the LExSIS data
     query = data_structure['query']
     # Figure out what predicates are relevant leaves from the relevance module
