@@ -45,7 +45,7 @@ data:
       source: person
       minimum: 0
       any: Are there any legal practitioners in {Y}?
-      another: Is there another legal practice in {Y}?
+      another: Is there another legal practitioner in {Y}?
       ask: Who is a legal practitioner in {Y}?
       tell: the legal practitioner {X} in {Y}
       encodings:
