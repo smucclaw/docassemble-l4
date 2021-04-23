@@ -309,10 +309,12 @@ def make_complete_code_block(input_object,root=""):
         new_root = root + dot + input_object['name']
     if is_list(input_object):
         output += "code: |\n"
-        #output += "  if \"" + new_root + ".value\" in subagenda:\n"
         output += "  " + new_root + ".value\n"
         if 'attributes' in input_object:
             for a in input_object['attributes']:
+                # TODO: In here, we need to check to see if the object is a reference
+                # to something higher up the data structure, and if so, exclude it here
+                # and add it to the agenda after the target has been collected.
                 if is_list(a):
                     output += "  if \"" + new_root + "." + a['name'] + ".gather()\" in subagenda:\n"
                     output += "    " + new_root + "." + a['name'] + ".gather()\n"
@@ -449,6 +451,9 @@ def generate_agendas(data_structure,sCASP):
         relevant_root += relroot
         relevant_sub += relsub
     
+    # TODO: At this point it would be nice to re-order the root agenda so that objects
+    # that are referred to are collected before they are referred to.
+
     output = "variable name: agenda\n"
     output += "data:\n"
     # Add agenda here
@@ -498,8 +503,3 @@ def find_relevant(data_element,relevant_preds,parent="",list_level=0,root=True):
             suboutput += subnew
 
     return (output,suboutput)
-
-
-# TODO: Lists that are being collected are not having their element values collected
-# unless and until they need to be displayed. Something needs to be added to the subagenda,
-# or we need to assume that the .value of a list element is always required? I'd say the latter?
