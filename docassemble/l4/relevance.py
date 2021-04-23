@@ -20,7 +20,12 @@ import re
 
 def relevant_to(scasp_code,query):
     dg = build_graph(scasp_code)
-    relevant = nx.descendants(dg,generalize(sp.term.parseString(query,True)))
+    # TODO: First, strip legally_holds or according_to from query, so it is
+    # searching for a term that exists in the graph.
+    query_parse = sp.term.parseString(query,True)
+    if query_parse['term']['functor']['base atom'] in ['according_to','legally_holds']:
+        query_parse = query_parse['term']['arguments'][1]
+    relevant = nx.descendants(dg,generalize(query_parse))
     leaves = set()
     for r in relevant:
         if not nx.descendants(dg,r):

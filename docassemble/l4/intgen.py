@@ -25,7 +25,7 @@ def generate_interview(LExSIS_source,scasp_source):
     output += "mandatory: True \n"
     output += "code: |\n"
     output += "  ruleSource = user_info().package + \":" + data_structure['rules'] + "\"\n"
-    output += "  query = \"legally_holds(Rule," + data_structure['query'] + ").\"\n"
+    output += "  query = \"" + data_structure['query'] + ".\"\n"
     if 'options' in data_structure:
         if 'show models' in data_structure['options']:
             output += "  show_models = " + str(data_structure['options']['show models']) + "\n"
