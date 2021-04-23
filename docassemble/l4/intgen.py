@@ -442,44 +442,61 @@ def generate_agendas(data_structure,sCASP):
 
     # Go through the data structure, and record the names of all data elements
     # with relevant encodings or children with relevant encodings.
-    relevant_data_elements = []
+    relevant_root = []
+    relevant_sub = []
     for d in data_structure['data']:
-        relevant_data_elements += find_relevant(d,relevant_preds)
+        (relroot,relsub) = find_relevant(d,relevant_preds)
+        relevant_root += relroot
+        relevant_sub += relsub
     
     output = "variable name: agenda\n"
     output += "data:\n"
     # Add agenda here
-    for d in data_structure['data']:
-        if d['name'] in relevant_data_elements:
-            output += "  - " + d['name']
-            if is_list(d):
-                output += ".gather()\n"
-            else:
-                output += ".value()\n"
+    for rr in list(dict.fromkeys(relevant_root)): # list(dict.fromkeys(list)) is just a way to remove duplicates and maintain order.
+        output += "  - " + rr + "\n"
     output += "---\n"
     output += "variable name: subagenda\n"
     output += "data:\n"
     # Add sub-agenda here
-    for r in set(relevant_data_elements):
+    for rs in set(relevant_sub):
         # TODO: Convert sub-agenda names into the names being used in the complete blocks.
-        output += "  - " + r + "\n"
+        output += "  - " + rs + "\n"
     output += "---\n"
 
     return output
 
-def find_relevant(data_element,relevant_preds):
+def find_relevant(data_element,relevant_preds,parent="",list_level=0,root=True):
     output = []
+    suboutput = []
+    if parent == "":
+        current = data_element['name']
+        dot = ""
+    else:
+        current = parent + "." + data_element['name']
+        dot = "."
+    if is_list(data_element):
+        current += "[" + "ijklm"[list_level] + "]"
+        new_list = list_level + 1
+        trailer = ".gather()"
+    else:
+        trailer = ".value"
     if 'encodings' in data_element:
         for e in data_element['encodings']:
             if docassemble.l4.relevance.generalize(term.parseString(e)) in relevant_preds:
-                output.append(data_element['name'])
+                if root:
+                    output.append(parent + dot + data_element['name'] + trailer)
+                else:
+                    suboutput.append(parent + dot + data_element['name'] + trailer)
     if 'attributes' in data_element:
         for a in data_element['attributes']:
-            new = find_relevant(a,relevant_preds)
-            if len(new):
-                output.append(data_element['name'])
-            output += new
+            (new,subnew) = find_relevant(a,relevant_preds,current,new_list,False)
+            if len(subnew):
+                if root:
+                    output.append(parent + dot + data_element['name'] + trailer)
+                else:
+                    suboutput.append(parent + dot + data_element['name'] + trailer)
+            suboutput += subnew
 
-    return output
+    return (output,suboutput)
 
 
