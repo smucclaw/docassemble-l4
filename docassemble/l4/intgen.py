@@ -470,6 +470,7 @@ def find_relevant(data_element,relevant_preds):
     output = []
     if 'encodings' in data_element:
         for e in data_element['encodings']:
+            log('Generalizing ' + str(e), 'info')
             if docassemble.l4.relevance.generalize(e) in relevant_preds:
                 output += data_element['name']
     if 'attributes' in data_element:
