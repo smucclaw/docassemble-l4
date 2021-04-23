@@ -1,0 +1,45 @@
+rules: rps.yml
+query: win(X,Y)
+data:
+  - name: game
+    type: String
+    minimum: 0
+    encodings:
+      - game(X)
+    attributes:
+      - name: participate_in
+        type: Object
+        minimum: 0
+        encodings:
+          - participate_in(X,Y)
+        source: player
+      - name: win
+        type: Object
+        minimum: 0
+        encodings:
+          - win(X,Y)
+        source: player
+  - name: player
+    type: String
+    minimum: 0
+    encodings:
+      - player(X)
+    attributes:
+      - name: throw
+        type: Object
+        minimum: 0
+        encodings:
+          - throw(X,Y)
+        source: sign
+  - name: sign
+    type: String
+    minimum: 0
+    encodings:
+      - sign(X)
+    attributes:
+      - name: beat
+        type: Object
+        minimum: 0
+        encodings:
+          - beat(X,Y)
+        source: sign

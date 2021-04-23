@@ -21,8 +21,7 @@ which accepts the contents of a LExSIS file as a string, and the contents of an 
 file as a string. The scasp_source file contents are expected to use our LPDAT implementation
 in s(CASP).
 
-that function will return the content of a docassemble interview that should function
+That function will return the content of a docassemble interview that should function
 on a server with this module and scasp installed, such as the [l4-docassemble server](https://github.com/smucclaw/l4-docassemble).
 
-It also includes a specialized version of the docassemble-datatypes generic questions, called l4.yml,
-which is included automatically in interviews created with `generate_interview`.
+You can also access that functionality in a friendlier interface by running the docassemble.l4:intgen.yml interview.

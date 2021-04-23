@@ -1,0 +1,46 @@
+modules:
+  - docassemble.l4.intgen
+---
+question: Docassemble-L4 Internview Generator
+subquestion: |
+  Do you want to upload a data structure file, or copy and paste (or type)
+  one in?
+field: inputtype
+choices:
+  - Upload
+  - Copy and Paste (or Type)
+---
+question: Docassemble-L4 Interview Generator
+subquestion: |
+  Upload a .yml file in the data structure format, and this interview will
+  convert it into a docassemble interview file.
+fields:
+  - Data Structure File: inputfile
+    datatype: file
+---
+question: Docassemble-L4 Interview Generator
+subquestion: |
+  Input the text from your yaml data structure file.
+fields:
+  - File Contents: inputtext
+    input type: area
+---
+mandatory: True
+code: |
+  outputfile = DAFile()
+  outputfile.initialize(filename="new_interview.yml",mimetype="text/yaml")
+  if inputtype == "Upload":
+    inputfile
+    outputfile.write(generate_interview(inputfile.slurp()))
+  else:
+    inputtext
+    outputfile.write(generate_interview(inputtext))
+  finish
+---
+sets: finish
+question: Your Interview
+subquestion: |
+  Download your [new interview file](${ outputfile.url_for() }), or copy and
+  paste it from below:
+  
+  <pre style="background-color:#EEEEEE">${ outputfile.slurp() }</pre>
