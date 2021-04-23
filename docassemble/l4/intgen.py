@@ -6,6 +6,7 @@
 
 import yaml
 import docassemble.l4.relevance
+from docassemble.base.util import log
 
 def generate_interview(LExSIS_source,scasp_source):
     data_structure = yaml.load(LExSIS_source, Loader=yaml.FullLoader)
