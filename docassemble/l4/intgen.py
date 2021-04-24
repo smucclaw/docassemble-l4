@@ -219,8 +219,6 @@ def generate_parent_values(input_object,parent="",parent_is_list=False,parent_is
 
 def generate_translation_code(input_object,indent_level=2,parent=""):
     # TODO: Object References should return .value.value
-    # TODO: Tests are incorrectly including the name of the parent element when in nested lists
-    # TODO: Once you are inside a new loop, on the name of the element for the current loop is required.
     output = ""
     def indent(): return (" ") * indent_level
     # output += indent() + "# Regarding " + input_object['name'] + "\n"
