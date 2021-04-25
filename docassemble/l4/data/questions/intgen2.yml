@@ -16,17 +16,11 @@ code: |
 code: |
   static_files_response = requests.get("http://localhost/api/playground", params={'key': api_key})
   playground_static_files = json.loads(static_files_response.text)
----
-code: |
   # Get the text of the two input files
   download_scasp_response = requests.get("http://localhost/api/playground", params={'key': api_key, 'filename': scasp_file})
   scasp_source = download_scasp_response.text
----
-code: |
   download_lexsis_response = requests.get("http://localhost/api/playground", params={'key': api_key, 'filename': lexsis_file})
   lexsis_source = download_lexsis_response.text
----
-code: |
   # Generate the interview, save it to a temporary file, get the filename
   new_interview_source = docassemble.l4.intgen.generate_interview(lexsis_source,scasp_source)
   new_interview_file = tempfile.NamedTemporaryFile(mode="w+",delete=False)
@@ -61,9 +55,9 @@ fields:
 ---
 question: Choose a LExSIS File
 subquestion: |
-  Please choose an s(CASP) file from your playground static folder to use for this interview.
+  Please choose a LExSIS file from your playground static folder to use for this interview.
 fields:
-  - s(CASP) File: lexsis_file
+  - LExSIS File: lexsis_file
     datatype: dropdown
     code: playground_static_files
 ---
