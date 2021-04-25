@@ -29,14 +29,10 @@ code: |
 code: |
   # Generate the interview, save it to a temporary file, get the filename
   new_interview_source = docassemble.l4.intgen.generate_interview(lexsis_source,scasp_source)
----
-code: |
   new_interview_file = tempfile.NamedTemporaryFile(mode="w+",delete=False)
   new_interview_file.write(new_interview_source)
   new_interview_filename = new_interview_file.name
   new_interview_file.close()
----
-code: |
   # Upload the temporary file to the playground
   upload_response = requests.post('http://localhost/api/playground', params={'key': api_key}, data={'folder': 'questions'}, files={'upload': new_interview_filename})
   
