@@ -25,7 +25,7 @@ code: |
   lexsis_source = download_lexsis_response.text
 
   # Generate the interview, save it to a temporary file, get the filename
-  new_interview_source = generate_interview(lexsis_source,scasp_source)
+  new_interview_source = docassemble.l4.intgen.generate_interview(lexsis_source,scasp_source)
   new_interview_file = tempfile.NamedTemporaryFile(delete=False)
   new_interview_file.write(new_interview_source)
   new_interview_filename = new_interview_file.name
