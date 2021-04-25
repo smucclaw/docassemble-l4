@@ -21,21 +21,25 @@ code: |
   # Get the text of the two input files
   download_scasp_response = requests.get("http://localhost/api/playground", params={'key': api_key, 'filename': scasp_file})
   scasp_source = download_scasp_response.text
+---
+code: |
   download_lexsis_response = requests.get("http://localhost/api/playground", params={'key': api_key, 'filename': lexsis_file})
   lexsis_source = download_lexsis_response.text
-
+---
+code: |
   # Generate the interview, save it to a temporary file, get the filename
   new_interview_source = docassemble.l4.intgen.generate_interview(lexsis_source,scasp_source)
-  new_interview_file = tempfile.NamedTemporaryFile(delete=False)
+---
+code: |
+  new_interview_file = tempfile.NamedTemporaryFile(mode="w+",delete=False)
   new_interview_file.write(new_interview_source)
   new_interview_filename = new_interview_file.name
   new_interview_file.close()
-  new_interview_file = open(new_interview_filename,"rb")
-
+---
+code: |
   # Upload the temporary file to the playground
-  upload_response = requests.post('http://localhost/api/playground', params={'key': api_key}, data={'folder': 'questions'}, files={'upload': new_interview_file})
-  new_interview_file.close()
-
+  upload_response = requests.post('http://localhost/api/playground', params={'key': api_key}, data={'folder': 'questions'}, files={'upload': new_interview_filename})
+  
   # Note finished.
   install_interview = True
 ---
