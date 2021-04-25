@@ -54,14 +54,14 @@ subquestion: |
   Please choose an s(CASP) file from your playground static folder to use for this interview.
 fields:
   - s(CASP) File: scasp_file
-    options: playground_static_files
+    choices: playground_static_files
 ---
 question: Choose a LExSIS File
 subquestion: |
   Please choose an s(CASP) file from your playground static folder to use for this interview.
 fields:
   - s(CASP) File: lexsis_file
-    options: playground_static_files
+    choices: playground_static_files
 ---
 sets: link_to_interview
 question: Run the New Interview
