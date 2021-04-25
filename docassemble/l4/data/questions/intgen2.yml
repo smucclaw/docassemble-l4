@@ -30,9 +30,11 @@ code: |
   new_interview_file.write(new_interview_source)
   new_interview_filename = new_interview_file.name
   new_interview_file.close()
+  new_interview_file = open(new_interview_filename,"rb")
 
   # Upload the temporary file to the playground
-  upload_response = requests.post('http://localhost/api/playground', params={'key': api_key}, data={'folder': 'questions'}, files={'upload': new_interview_filename})
+  upload_response = requests.post('http://localhost/api/playground', params={'key': api_key}, data={'folder': 'questions'}, files={'upload': new_interview_file})
+  new_interview_file.close()
 
   # Note finished.
   install_interview = True
