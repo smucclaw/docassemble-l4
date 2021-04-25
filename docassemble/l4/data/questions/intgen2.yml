@@ -23,13 +23,8 @@ code: |
   lexsis_source = download_lexsis_response.text
   # Generate the interview, save it to a temporary file, get the filename
   new_interview_source = docassemble.l4.intgen.generate_interview(lexsis_source,scasp_source)
-  new_interview_file = tempfile.NamedTemporaryFile(mode="w+",delete=False)
-  new_interview_file.write(new_interview_source)
-  new_interview_filename = new_interview_file.name
-  new_interview_file.close()
-  del new_interview_file
   # Upload the temporary file to the playground
-  upload_response = requests.post('http://localhost/api/playground', params={'key': api_key}, data={'folder': 'questions'}, files={'upload': new_interview_filename})
+  upload_response = requests.post('http://localhost/api/playground', params={'key': api_key}, data={'folder': 'questions'}, files={file_name + '.yml': new_interview_source})
   
   # Note finished.
   install_interview = True
@@ -62,7 +57,11 @@ fields:
     datatype: dropdown
     code: playground_static_files
 ---
+question: What File Name Should the Interview Have?
+fields:
+  - File Name: file_name
+---
 sets: link_to_interview
 question: Run the New Interview
 subquestion: |
-  [Click here](/interview?i=docassemble.playground${ user_id }:${ new_interview_filename }) to run the new interview.
+  [Click here](/interview?i=docassemble.playground${ user_id }:${ file_name + ".yml" }) to run the new interview.
