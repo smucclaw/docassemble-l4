@@ -29,17 +29,8 @@ code: |
   # Note finished.
   install_interview = True
 ---
-question: Enter the API Key
-subquestion: |
-  This is required in order to install the generated interview on your docassemble server.
-
-  You can create or find the API key by clicking [here](/manage_api), clicking "New", giving the API key a name, choosing
-  "No Authentication" as the security method, and clicking "Create".
-
-  Then copy the API Key into the field below and click "Continue".
-
-fields:
-  - API Key: api_key
+code: |  
+  api_key = get_config('l4')['api key']
 ---
 question: Choose an s(CASP) File
 subquestion: |
