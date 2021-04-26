@@ -446,14 +446,14 @@ def generate_agendas(data_structure,sCASP):
     # with relevant encodings or children with relevant encodings.
     relevant_root = []
     relevant_sub = []
+    
+    
     for d in data_structure['data']:
         (relroot,relsub) = find_relevant(d,relevant_preds)
         relevant_root += relroot
         relevant_sub += relsub
     
-    # TODO: At this point it would be nice to re-order the root agenda so that objects
-    # that are referred to are collected before they are referred to, and are included
-    # in the relevance list if they were not already.
+    relevant_root.sort(key=is_target,reverse=True)
 
     output = "variable name: agenda\n"
     output += "data:\n"
@@ -465,7 +465,6 @@ def generate_agendas(data_structure,sCASP):
     output += "data:\n"
     # Add sub-agenda here
     for rs in set(relevant_sub):
-        # TODO: Convert sub-agenda names into the names being used in the complete blocks.
         output += "  - " + rs + "\n"
     output += "---\n"
 
@@ -474,7 +473,6 @@ def generate_agendas(data_structure,sCASP):
 def find_relevant(data_element,relevant_preds,parent="",list_level=0,root=True):
     output = []
     suboutput = []
-    refoutput = []
     if parent == "":
         current = data_element['name']
         dot = ""
@@ -495,7 +493,7 @@ def find_relevant(data_element,relevant_preds,parent="",list_level=0,root=True):
                 else:
                     suboutput.append(parent + dot + data_element['name'] + trailer)
                 if data_element['type'] == "Object": # If there is an object reference in a relevant data_element, the source object is also relevant.
-                    output.append(data_element['source'] + ".gather()") #Sources are always root objects.
+                    output.append(data_element['source'] + ".gather() #TARGET") #Sources are always root objects.
     if 'attributes' in data_element:
         for a in data_element['attributes']:
             (new,subnew) = find_relevant(a,relevant_preds,current,new_list,False)
@@ -505,5 +503,9 @@ def find_relevant(data_element,relevant_preds,parent="",list_level=0,root=True):
                 else:
                     suboutput.append(parent + dot + data_element['name'] + trailer)
             suboutput += subnew
+            output += new
 
     return (output,suboutput)
+
+def is_target(agenda_item):
+    return agenda_item.endswith(" #TARGET")
