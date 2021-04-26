@@ -14,6 +14,17 @@ Install this package using docassemble's package manager from the github source.
 * pyparsing
 * networkx
 
+## Configuration
+
+In order for the interview generator to be able to install newly-generated interviews onto your playground,
+it needs API access. To provide that, go to "Profile", "Other Settings", "API Keys", and generate an API Key.
+Then add it to your docassemble server configuration as follows:
+
+```
+l4:
+  API Key: XXXXXXX
+```
+
 ## Use
 
 The docassemble.l4.intgen namespace includes `generate_interview(LExSIS_source,scasp_source)`,
