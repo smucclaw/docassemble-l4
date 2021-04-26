@@ -24,4 +24,5 @@ in s(CASP).
 That function will return the content of a docassemble interview that should function
 on a server with this module and scasp installed, such as the [l4-docassemble server](https://github.com/smucclaw/l4-docassemble).
 
-You can also access that functionality in a friendlier interface by running the docassemble.l4:intgen.yml interview.
+You can also access that functionality in a friendlier interface by running the docassemble.l4:intgen.yml interview,
+which accepts a LExSIS file and an s(CASP) file from the current user's playground static folder.
