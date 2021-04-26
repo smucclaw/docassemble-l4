@@ -452,7 +452,8 @@ def generate_agendas(data_structure,sCASP):
         relevant_sub += relsub
     
     # TODO: At this point it would be nice to re-order the root agenda so that objects
-    # that are referred to are collected before they are referred to.
+    # that are referred to are collected before they are referred to, and are included
+    # in the relevance list if they were not already.
 
     output = "variable name: agenda\n"
     output += "data:\n"
@@ -473,6 +474,7 @@ def generate_agendas(data_structure,sCASP):
 def find_relevant(data_element,relevant_preds,parent="",list_level=0,root=True):
     output = []
     suboutput = []
+    refoutput = []
     if parent == "":
         current = data_element['name']
         dot = ""
@@ -492,6 +494,8 @@ def find_relevant(data_element,relevant_preds,parent="",list_level=0,root=True):
                     output.append(parent + dot + data_element['name'] + trailer)
                 else:
                     suboutput.append(parent + dot + data_element['name'] + trailer)
+                if data_element['type'] == "Object": # If there is an object reference in a relevant data_element, the source object is also relevant.
+                    output.append(data_element['source'] + ".gather()") #Sources are always root objects.
     if 'attributes' in data_element:
         for a in data_element['attributes']:
             (new,subnew) = find_relevant(a,relevant_preds,current,new_list,False)
