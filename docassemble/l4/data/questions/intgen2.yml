@@ -49,10 +49,12 @@ fields:
     code: playground_static_files
 ---
 question: What File Name Should the Interview Have?
+subquestion: |
+  Do not provide a file extension.
 fields:
   - File Name: file_name
 ---
 sets: link_to_interview
 question: Run the New Interview
 subquestion: |
-  [Click here](/interview?i=docassemble.playground${ user_id }:${ file_name + ".yml" }) to run the new interview.
+  [Click here](/interview?i=docassemble.playground${ user_id }:${ file_name + ".yml&reset=1" }) to run the new interview.
