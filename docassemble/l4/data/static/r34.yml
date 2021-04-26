@@ -393,8 +393,6 @@ data:
       - conditions_of_second_schedule_satisfied
 terms:
   - r34_1: |
-      [34](https://). Executive appointments
-      
       34.—(1)  A legal practitioner must not accept any executive appointment associated with 
       any of the following businesses:
   - r34_1_a: |
@@ -460,3 +458,18 @@ terms:
   - r34_7: |
       (7)  To avoid doubt, nothing in this rule prohibits a legal practitioner 
       from accepting any appointment in any institution set out in the Third Schedule.
+  - r34(9) definition of executive appointment: |
+      “executive appointment” means a position associated with a business, or in a business 
+      entity or Singapore law practice, which entitles the holder of the position to perform 
+      executive functions in relation to the business, business entity or Singapore law practice 
+      (as the case may be), but excludes any non‑executive director or independent director 
+      associated with the business or in the business entity;
+  - r34(9) definition of business entity: |
+      “business entity”  —
+      (a)	includes any company, corporation, partnership, limited liability partnership, 
+      sole proprietorship, business trust or other entity that carries on any business; but
+      (b)	excludes any Singapore law practice, any Joint Law Venture, any Formal Law Alliance, 
+      any foreign law practice and any institution set out in the Third Schedule;
+  - r34(9) definition of business: |
+      “business” includes any business, trade or calling in Singapore or elsewhere, 
+      whether or not for the purpose of profit, but excludes the practice of law;

@@ -6,7 +6,7 @@
 % #pred according_to(R,flies(X)) :: 'according to rule @(R), @(X) flies'.
 #pred rule(R) :: '@(R) is a rule'.
 #pred conclusion(C) :: '@(C) is a conclusion'.
-#pred according_to(R,C) :: 'according to rule @(R), the conclusion @(C) holds'.
+%#pred according_to(R,C) :: 'according to rule @(R), the conclusion @(C) holds'.
 #pred overrides(R1,C1,R2,C2) :: 'the conclusion @(C1) from rule @(R1) overrides the conclusion @(C2) from rule @(R2)'.
 #pred opposes(R1,C1,R2,C2) :: 'the conclusion @(C1) from rule @(R1) conflicts with the conclusion @(C2) from rule @(R2)'.
 
@@ -77,7 +77,7 @@ disqualified(Rule,Conclusion) :-
 
 % A rule is defeated if it is refuted or rebutted by a rule that is not compromised, or if it is disqualified.
 % (A rebutting rule is already not compromsied, the requirement of non-compromise does not apply to refutation)
-#pred defeated(Rule,Conclusion) :: 'the conclusion @(Conclusion) from rule @(Rule) is defeated'.
+%#pred defeated(Rule,Conclusion) :: 'the conclusion @(Conclusion) from rule @(Rule) is defeated'.
 #pred defeated_by_disqualification(R1,C1,R2,C2) :: 'the conclusion @(C1) from rule @(R1) is defeated by disqualification by the conclusion @(C2) from rule @(R2)'.
 #pred defeated_by_rebuttal(R,C,OR,OC) :: 'the conclusion @(C) from rule @(R) is defeated by rebuttal by the conclusion @(OC) from rule @(R)'.
 #pred defeated_by_refutation(R,C,OR,OC) :: 'the conclusion @(C) from rule @(R) is defeated by refutation by the conclusion @(OC) from rule @(R)'.
@@ -122,6 +122,8 @@ legally_holds(R,C) :-
 
 #pred legally_holds(Rule,may(Y,accept,Z)) :: 'it holds in accordance with @(Rule) that @(Y) is permitted to accept @(Z)'.
 #pred legally_holds(Rule,must_not(Y,accept,Z)) :: 'it holds in accordance with @(Rule) that @(Y) is prohibited from accepting @(Z)'.
+#pred defeated(Rule,may(Y,accept,Z)) :: 'the conclusion that @(Y) may accept @(Z) from rule @(Rule) is defeated'.
+#pred defeated(Rule,must_not(Y,accept,Z)) :: 'the conclusion that @(Y) must not accept @(Z) from rule @(Rule) is defeated'.
 
 % PREDICATE DEFINITIONS
 #pred accepts_position_as_representative(A,B,C) :: '@(A) accepts the position @(B) as a representative of @(C)'.
@@ -131,16 +133,15 @@ legally_holds(R,C) :-
 #pred as_compensation_for(A,B) :: '@(A) is provided as compensation in respect of @(B)'.
 #pred associated_with(A,B) :: '@(A) is associated with @(B)'.
 #pred beneficial_owner_of(X,Y) :: '@(X) is a beneficial owner of @(Y)'.
-#pred -business_entity(X) :: 'as per 34(7)(b), @(X) is not a business entity for the purposes of section 34'.
-#pred business_entity(X) :: 'as per 34(7)(a) @(X) is a business entity for the purposes of section 34'.
+#pred business_entity(X) :: 'in accordance with the r34(9) definition of business entity, @(X) is a business entity'.
 #pred business_trust(X) :: '@(X) is a business trust'.
-#pred business(X) :: '@(X) is a business for the purposes of section 34'.
+#pred business(X) :: ' in accordance with the r34(9) definition of business, @(X) is a business'.
 #pred calling(X) :: '@(X) is a calling'.
 #pred carries_on(X,Y) :: '@(X) carries on @(Y)'.
 #pred company(X) :: '@(X) is a company'.
 #pred conditions_of_second_schedule_satisfied :: 'the conditions of the second schedule are satisfied'.
 #pred corporation(X) :: '@(X) is a corporation'.
-#pred defeated(X,Y) :: 'the conclusion from @(X) of @(Y) is defeated'.
+%#pred defeated(X,Y) :: 'the conclusion from @(X) of @(Y) is defeated'.
 #pred derogates_from_dignity_of_legal_profession(X) :: '@(X) derogates from the dignity of the legal profession'.
 #pred described_in_first_schedule(X) :: '@(X) is set out in the first schedule'.
 #pred described_in_s1(B) :: '@(B) is a business described in 34(1)'.
@@ -148,7 +149,7 @@ legally_holds(R,C) :-
 #pred director_of(X,Y) :: '@(X) is a director of @(Y)'.
 #pred entitles_holder(X) :: '@(X) entitles the holder to perform executive functions'.
 #pred -executive_appointment(X) :: '@(X) is not an executive appointment for the purposes of section 34'.
-#pred executive_appointment(X) :: '@(X) is an executive appointment for the purposes of section 34'.
+#pred executive_appointment(X) :: 'in accordance with the r34(9) definition of executive appointment, @(X) is an executive appointment'.
 #pred executive_appointment_associated_with_a_business(X,Y) :: '@(X) is an executive appointment associated with the business @(Y)'.
 #pred executive_appointment_in_a_business_entity(X,Y) :: '@(X) is an executive appointment in the business entity @(Y)'.
 #pred executive_appointment_in_a_law_practice(X,Y) :: '@(X) is an executive appointment in the law practice @(Y)'.
