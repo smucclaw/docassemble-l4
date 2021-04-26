@@ -111,7 +111,7 @@ defeated(R,C) :-
     defeated_by_refutation(R,C,OR,OC).
 
 % a conclusion holds if it is found and not defeated.
-#pred legally_holds(R,C) :: 'the conclusion @(C) from rule @(R) ultimately holds'.
+%#pred legally_holds(R,C) :: 'the conclusion @(C) from rule @(R) ultimately holds'.
 legally_holds(R,C) :-
     not defeated(R,C),
     according_to(R,C).
