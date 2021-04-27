@@ -21,6 +21,11 @@ def generate_interview(LExSIS_source,scasp_source):
     output += "  - docassemble.datatypes.DADataType\n"
     output += "---\n"
 
+    ## To turn on the navigation bar.
+    output += "features:\n"
+    output += "  navigation: True\n"
+    output += "---"
+
     ## Generate the parameters for DAScasp
     output += "mandatory: True \n"
     output += "code: |\n"
@@ -458,7 +463,9 @@ def generate_agendas(data_structure,sCASP):
     output = "variable name: agenda\n"
     output += "data:\n"
     # Add agenda here
-    for rr in list(dict.fromkeys(relevant_root)): # list(dict.fromkeys(list)) is just a way to remove duplicates and maintain order.
+    undup_relevant_root = [x for x in relevant_root if x + " #TARGET" not in relevant_root] # Leave only the targetted ones if there are duplicates.
+    for rr in list(dict.fromkeys(undup_relevant_root)): # list(dict.fromkeys(list)) is just a way to remove duplicates and maintain order.
+        output += "  - nav.set_section('" + rr.replace('.gather()','').replace('.value','').replace(' #TARGET','') + "_review')\n"
         output += "  - " + rr + "\n"
     output += "---\n"
     output += "variable name: subagenda\n"
@@ -466,6 +473,13 @@ def generate_agendas(data_structure,sCASP):
     # Add sub-agenda here
     for rs in set(relevant_sub):
         output += "  - " + rs + "\n"
+    output += "---\n"
+
+    # Add sections (done after agenda to get the same ordering)
+    output += "sections:\n"
+    for d in list(dict.fromkeys(undup_relevant_root)):
+        output += "  - " + d.replace('.gather()','').replace('.value','').replace(' #TARGET','') + "_review: " + d.replace('.gather()','').replace('.value','').replace(' #TARGET','').replace('_',' ').capitalize() + "\n"
+    output += "  - finished: Finished\n"
     output += "---\n"
 
     return output
