@@ -48,10 +48,10 @@ def generate_interview(LExSIS_source,scasp_source):
         output += "---\n"
 
     ## Include the Source File So It Can Be Accessed At RunTime
-    output += "variable name: data_structure\n"
-    output += "data:\n  "
-    output += '  '.join(yaml.dump(data_structure,width=1000000).splitlines(True))
-    output += "---\n"
+    # output += "variable name: data_structure\n"
+    # output += "data:\n  "
+    # output += '  '.join(yaml.dump(data_structure,width=1000000).splitlines(True))
+    # output += "---\n"
 
 
     ## Generate Objects Block
