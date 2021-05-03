@@ -155,28 +155,3 @@ script: |
     $(".dasingleselect").change(function(){this.form.submit()})
   </script>
 ---
-#mandatory: True
-#code: |
-  #def isList(agenda_item):
-    #substr = "[ijklmn]*[0-9]*"
-    #agenda_without_indices = re.sub("\[" + substr + "\]",'',agenda_item)
-    #for i, item in enumerate(agenda_without_indices):
-        #for var in data_structure:
-            #if item == var['name']:
-                #if i + 1 == len(agenda_without_indices):
-                    #if "exactly" in var and var["exactly"] > 1:
-                        #return True
-                    #if "minimum" in var:
-                      #if "maximum" not in var:
-                        #return True
-                      #if var["minimum"] > 1:
-                        #return True
-                      #if var["minimum"] == 0 and "maximum" in var and var["maximum"] == 1:
-                        #return True
-                    #if "maximum" in var:
-                      #if var["maximum"] > 1:
-                        #return True
-                    #return False
-                #elif "attributes" in var:
-                    #data_structure = var["attributes"]
-                #pass
