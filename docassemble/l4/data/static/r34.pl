@@ -127,15 +127,15 @@ legally_holds(R,C) :-
 
 % PREDICATE DEFINITIONS
 #pred accepts_position_as_representative(A,B,C) :: '@(A) accepts the position @(B) as a representative of @(C)'.
-#pred according_to(X,described_in_s1(Y)) :: 'according to @(X), @(Y) is described in section 1'.
-#pred according_to(X,may(Y,accept,Z)) :: 'in accordance with @(X), @(Y) is permitted to accept @(Z)'.
-#pred according_to(X,must_not(Y,accept,Z)) :: 'in accordance with @(X), @(Y) is prohibited from accepting @(Z)'.
+#pred according_to(X,described_in_s1(Y)) :: 'according to {@(X)}, @(Y) is described in section 1'.
+#pred according_to(X,may(Y,accept,Z)) :: 'in accordance with {@(X)}, @(Y) is permitted to accept @(Z)'.
+#pred according_to(X,must_not(Y,accept,Z)) :: 'in accordance with {@(X)}, @(Y) is prohibited from accepting @(Z)'.
 #pred as_compensation_for(A,B) :: '@(A) is provided as compensation in respect of @(B)'.
 #pred associated_with(A,B) :: '@(A) is associated with @(B)'.
 #pred beneficial_owner_of(X,Y) :: '@(X) is a beneficial owner of @(Y)'.
-#pred business_entity(X) :: 'in accordance with the r34(9) definition of business entity, @(X) is a business entity'.
+#pred business_entity(X) :: 'in accordance with the {business entity|r34(9) definition of business entity}, @(X) is a business entity'.
 #pred business_trust(X) :: '@(X) is a business trust'.
-#pred business(X) :: ' in accordance with the r34(9) definition of business, @(X) is a business'.
+#pred business(X) :: ' in accordance with the {business|r34(9) definition of business}, @(X) is a business'.
 #pred calling(X) :: '@(X) is a calling'.
 #pred carries_on(X,Y) :: '@(X) carries on @(Y)'.
 #pred company(X) :: '@(X) is a company'.
@@ -149,7 +149,7 @@ legally_holds(R,C) :-
 #pred director_of(X,Y) :: '@(X) is a director of @(Y)'.
 #pred entitles_holder(X) :: '@(X) entitles the holder to perform executive functions'.
 #pred -executive_appointment(X) :: '@(X) is not an executive appointment for the purposes of section 34'.
-#pred executive_appointment(X) :: 'in accordance with the r34(9) definition of executive appointment, @(X) is an executive appointment'.
+#pred executive_appointment(X) :: 'in accordance with the {executive appointment|r34(9) definition of executive appointment}, @(X) is an executive appointment'.
 #pred executive_appointment_associated_with_a_business(X,Y) :: '@(X) is an executive appointment associated with the business @(Y)'.
 #pred executive_appointment_in_a_business_entity(X,Y) :: '@(X) is an executive appointment in the business entity @(Y)'.
 #pred executive_appointment_in_a_law_practice(X,Y) :: '@(X) is an executive appointment in the law practice @(Y)'.
@@ -169,7 +169,7 @@ legally_holds(R,C) :-
 #pred jurisdiction(X,Y) :: '@(X) is located in @(Y)'.
 #pred law_practice_in_singapore(X) :: '@(X) is a singapore law practice'.
 #pred law_practice(X) :: '@(X) is a law practice'.
-#pred law_related_service(X) :: '@(X) is a law-related service for the purposes of section 34'.
+#pred law_related_service(X) :: '@(X) is a law-related service'.
 #pred legal_owner_of(X,Y) :: '@(X) is a legal owner of @(Y)'.
 #pred legal_practitioner(X) :: '@(X) is a legal practitioner'.
 #pred legal_service(X) :: '@(X) is a legal service'.
@@ -191,7 +191,7 @@ legally_holds(R,C) :-
 #pred performed_by(A,B) :: '@(A) was performed by @(B)'.
 #pred position(X) :: '@(X) is a position'.
 #pred primary_occupation_of(X,Y) :: '@(Y) is the primary occupation of @(X)'.
-#pred prohibited_business(X) :: '@(X) is a business which is prohibited as defined by section 34(1)(f)'.
+#pred prohibited_business(X) :: '@(X) is a prohibited business'.
 #pred provides_legal_or_law_related_services(X) :: '@(X) provides legal or law-related services'.
 #pred provides(A,B) :: '@(A) provides @(B)'.
 #pred service(X) :: '@(X) is a service'.
