@@ -43,7 +43,7 @@ def generate_interview(LExSIS_source,scasp_source):
 
     ## Copy the terms from the source file
     if 'terms' in data_structure:
-        output += "auto terms:\n"
+        output += "terms:\n"
         output += yaml.dump(data_structure['terms'],width=1000000)
         output += "---\n"
 
