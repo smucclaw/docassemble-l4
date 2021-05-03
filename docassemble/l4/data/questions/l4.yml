@@ -150,6 +150,10 @@ fields:
   - ${ x.self_value }: x.value
     datatype: object
     choices: x.source
+script: |
+  <script>
+    $(".dasingleselect").change(function(){this.form.submit()})
+  </script>
 ---
 mandatory: True
 code: |
