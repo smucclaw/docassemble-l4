@@ -89,6 +89,7 @@ def generate_interview(LExSIS_source,scasp_source):
 
     ## Generate The Closing Question
     output += "mandatory: True\n"
+    output += "section: Finished\n"
     output += "question: Finished\n"
     output += "subquestion: |\n"
     output += "  ${ DAScasp_show_answers }\n"
