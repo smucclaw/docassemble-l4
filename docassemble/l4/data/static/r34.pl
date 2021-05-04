@@ -135,7 +135,7 @@ legally_holds(R,C) :-
 #pred beneficial_owner_of(X,Y) :: '@(X) is a beneficial owner of @(Y)'.
 #pred business_entity(X) :: 'in accordance with the {business entity|r34(9) definition of business entity}, @(X) is a business entity'.
 #pred business_trust(X) :: '@(X) is a business trust'.
-#pred business(X) :: ' in accordance with the {business|r34(9) definition of business}, @(X) is a business'.
+#pred business(X) :: 'in accordance with the {business|r34(9) definition of business}, @(X) is a business'.
 #pred calling(X) :: '@(X) is a calling'.
 #pred carries_on(X,Y) :: '@(X) carries on @(Y)'.
 #pred company(X) :: '@(X) is a company'.
