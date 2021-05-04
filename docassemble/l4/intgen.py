@@ -24,7 +24,7 @@ def generate_interview(LExSIS_source,scasp_source):
     ## To turn on the navigation bar.
     output += "features:\n"
     output += "  navigation: True\n"
-    output += "---"
+    output += "---\n"
 
     ## Generate the parameters for DAScasp
     output += "mandatory: True \n"
