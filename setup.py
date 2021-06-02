@@ -57,7 +57,7 @@ setup(name='docassemble.l4',
           'networkx',
           'docassemble.datatypes @ git+https://github.com/smucclaw/docassemble-datatypes',
           'docassemble.scasp @ git+https://github.com/smucclaw/docassemble-scasp', 
-          'gf_python @ git+https://github.com/smucclaw/gf-python@v0.1'],
+          'gf_python @ git+https://github.com/smucclaw/gf-python'],
       zip_safe=False,
       package_data=find_package_data(where='docassemble/l4/', package='docassemble.l4'),
      )
