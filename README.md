@@ -11,6 +11,7 @@ Install this package using docassemble's package manager from the github source.
 ## Dependencies
 
 * docassemble-scasp
+* gf-python
 * pyparsing
 * networkx
 
