@@ -1,5 +1,5 @@
 rules: rps.yml
-query: win(X,Y)
+query: winner(Game,Player)
 data:
   - name: game
     type: String
@@ -13,11 +13,11 @@ data:
         encodings:
           - participate_in(X,Y)
         source: player
-      - name: win
+      - name: winner
         type: Object
         minimum: 0
         encodings:
-          - win(X,Y)
+          - winner(X,Y)
         source: player
   - name: player
     type: String
@@ -49,5 +49,3 @@ terms:
       a game of rock-paper-scissors, also known as Rochambeau
 options:
   show models: True
-
-
