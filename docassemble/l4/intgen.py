@@ -171,8 +171,7 @@ def generate_parent_values(input_object, parent="", parent_is_list=False, parent
     else:
         index = level
     output += "code: |\n"
-    output += "  " + parent + index + dot + input_object['name'] + '.self_value = "' + input_object['name'].replace('_',
-                                                                                                                    ' ') + '"\n'
+    output += "  " + parent + index + dot + input_object['name'] + '.self_value = "' + input_object['name'].replace('_', ' ') + '"\n'
     if parent != "":  # This object has a parent
         output += "  " + parent + index + dot + input_object['name'] + ".parent_value = " + parent + index + (
             ".value.value" if parent_is_objref else ".value") + "\n"
@@ -180,28 +179,21 @@ def generate_parent_values(input_object, parent="", parent_is_list=False, parent
         output += "  " + parent + index + dot + input_object['name'] + ".parent_value = ''\n"
     if is_list(input_object):
         if 'any' in input_object:
-            output += "  " + parent + index + dot + input_object['name'] + ".any = \"" + input_object['any'].replace(
-                '{Y}', "\" + " + parent + index + dot + input_object['name'] + ".parent_value + \"") + "\"\n"
+            output += "  " + parent + index + dot + input_object['name'] + ".any = \"" + input_object['any'].replace('{Y}', "\" + " + parent + index + dot + input_object['name'] + ".parent_value + \"") + "\"\n"
         else:
             output += "  " + parent + index + dot + input_object['name'] + ".any = \"\"\n"
         if 'another' in input_object:
-            output += "  " + parent + index + dot + input_object['name'] + ".another = \"" + input_object[
-                'another'].replace('{Y}', "\" + " + parent + index + dot + input_object[
-                'name'] + ".parent_value + \"") + "\"\n"
+            output += "  " + parent + index + dot + input_object['name'] + ".another = \"" + input_object['another'].replace('{Y}', "\" + " + parent + index + dot + input_object['name'] + ".parent_value + \"") + "\"\n"
         else:
             output += "  " + parent + index + dot + input_object['name'] + ".another = \"\"\n"
     else:
         if 'ask' in input_object:
-            output += "  " + parent + index + dot + input_object['name'] + ".ask = \"" + input_object['ask'].replace(
-                '{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
+            output += "  " + parent + index + dot + input_object['name'] + ".ask = \"" + input_object['ask'].replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
         else:
             output += "  " + parent + index + dot + input_object['name'] + ".ask = \"\"\n"
         if 'tell' in input_object:
             output += "---\ncode: |\n"
-            output += "  " + parent + index + dot + input_object['name'] + ".tell = \"" + input_object['tell'].replace(
-                '{X}', "\" + " + parent + index + dot + input_object['name'] + (
-                    ".value.value" if input_object['type'] == 'Object' else ".value") + " + \"").replace('{Y}',
-                                                                                                         "\" + " + parent + index + ".tell + \"") + "\"\n"
+            output += "  " + parent + index + dot + input_object['name'] + ".tell = \"" + input_object['tell'].replace('{X}', "\" + " + parent + index + dot + input_object['name'] + (".value.value" if input_object['type'] == 'Object' else ".value") + " + \"").replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
         else:
             output += "---\ncode: |\n"
             output += "  " + parent + index + dot + input_object['name'] + ".tell = " + parent + index + dot + \
@@ -223,26 +215,19 @@ def generate_parent_values(input_object, parent="", parent_is_list=False, parent
         else:
             output += "  " + parent + index + dot + input_object['name'] + nextindex + ".parent_value = ''\n"
         if 'ask' in input_object:
-            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".ask = \"" + input_object[
-                'ask'].replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
+            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".ask = \"" + input_object['ask'].replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
         else:
             output += "  " + parent + index + dot + input_object['name'] + nextindex + ".ask = \"\"\n"
         if 'tell' in input_object:
             output += "---\ncode: |\n"
-            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".tell = \"" + input_object[
-                'tell'].replace('{X}', "\" + " + parent + index + dot + input_object['name'] + nextindex + (
-                ".value.value" if input_object['type'] == 'Object' else ".value") + " + \"").replace('{Y}',
-                                                                                                     "\" + " + parent + index + ".tell + \"") + "\"\n"
+            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".tell = \"" + input_object['tell'].replace('{X}', "\" + " + parent + index + dot + input_object['name'] + nextindex + (".value.value" if input_object['type'] == 'Object' else ".value") + " + \"").replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
         else:
             output += "---\ncode: |\n"
-            output += "  " + parent + index + dot + input_object[
-                'name'] + nextindex + ".tell = " + parent + index + dot + input_object['name'] + nextindex + (
-                          ".value.value" if input_object['type'] == 'Object' else ".value") + "\n"
+            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".tell = " + parent + index + dot + input_object['name'] + nextindex + (".value.value" if input_object['type'] == 'Object' else ".value") + "\n"
         output += "---\n"
     if 'attributes' in input_object:
         for a in input_object['attributes']:
-            output += generate_parent_values(a, parent + index + dot + input_object['name'], is_list(input_object),
-                                             input_object['type'] == 'Object')
+            output += generate_parent_values(a, parent + index + dot + input_object['name'], is_list(input_object), input_object['type'] == 'Object')
     return output
 
 
@@ -260,35 +245,25 @@ def generate_translation_code(input_object, indent_level=2, parent=""):
             output += indent() + "  for " + input_object['name'] + "_element in " + input_object['name'] + ":\n"
         else:  # This is a non-root list
             output += indent() + "if defined('" + parent + "." + input_object['name'] + "'):\n"
-            output += indent() + "  for " + input_object['name'] + "_element in " + parent + "." + input_object[
-                'name'] + ":\n"
+            output += indent() + "  for " + input_object['name'] + "_element in " + parent + "." + input_object['name'] + ":\n"
         indent_level += 4
         if 'encodings' in input_object:
             if input_object['type'] == "Boolean":
                 if parent == "" or parent.endswith("_element"):
-                    output += indent() + "if defined('" + input_object['name'] + "_element.value') and " + input_object[
-                        'name'] + "_element.value:\n"
+                    output += indent() + "if defined('" + input_object['name'] + "_element.value') and " + input_object['name'] + "_element.value:\n"
                 else:
-                    output += indent() + "if defined('" + parent + "." + input_object[
-                        'name'] + "_element.value') and " + parent + "." + input_object['name'] + "_element.value:\n"
+                    output += indent() + "if defined('" + parent + "." + input_object['name'] + "_element.value') and " + parent + "." + input_object['name'] + "_element.value:\n"
             else:
                 if parent == "" or parent.endswith("_element"):
                     output += indent() + "if defined('" + input_object['name'] + "_element.value'):\n"
                 else:
-                    output += indent() + "if defined('" + parent + "." + input_object[
-                        'name'] + "_element.value'):\n"  # THIS IS THE PROBLEM
+                    output += indent() + "if defined('" + parent + "." + input_object['name'] + "_element.value'):\n"  # THIS IS THE PROBLEM
             indent_level += 2
             for e in input_object['encodings']:
                 if parent == "":
-                    output += indent() + "facts += \"" + e.replace('X', "daSCASP_\" + urllib.parse.quote_plus(str(" +
-                                                                   input_object[
-                                                                       'name'] + "_element.value)).replace('%','__perc__').replace('+','__plus__') + \"") + ".\\n\"\n"
+                    output += indent() + "facts += \"" + e.replace('X', "daSCASP_\" + urllib.parse.quote_plus(str(" + input_object['name'] + "_element.value)).replace('%','__perc__').replace('+','__plus__') + \"") + ".\\n\"\n"
                 else:
-                    output += indent() + "facts += \"" + e.replace('X', "daSCASP_\" + urllib.parse.quote_plus(str(" +
-                                                                   input_object[
-                                                                       'name'] + "_element.value)).replace('%','__perc__').replace('+','__plus__') + \"").replace(
-                        'Y',
-                        "daSCASP_\" + urllib.parse.quote_plus(str(" + parent + ".value)).replace('%','__perc__').replace('+','__plus__') + \"") + ".\\n\"\n"
+                    output += indent() + "facts += \"" + e.replace('X', "daSCASP_\" + urllib.parse.quote_plus(str(" + input_object['name'] + "_element.value)).replace('%','__perc__').replace('+','__plus__') + \"").replace('Y', "daSCASP_\" + urllib.parse.quote_plus(str(" + parent + ".value)).replace('%','__perc__').replace('+','__plus__') + \"") + ".\\n\"\n"
             # if input_object['type'] == "Boolean": # we are now indenting for everything.
             indent_level -= 2
         if 'attributes' in input_object:
@@ -299,11 +274,9 @@ def generate_translation_code(input_object, indent_level=2, parent=""):
         if 'encodings' in input_object:
             if input_object['type'] == "Boolean":
                 if parent == "":
-                    output += indent() + "if defined('" + input_object['name'] + ".value') and " + input_object[
-                        'name'] + ".value:\n"
+                    output += indent() + "if defined('" + input_object['name'] + ".value') and " + input_object['name'] + ".value:\n"
                 else:
-                    output += indent() + "if defined('" + parent + "." + input_object[
-                        'name'] + ".value') and " + parent + "." + input_object['name'] + ".value:\n"
+                    output += indent() + "if defined('" + parent + "." + input_object['name'] + ".value') and " + parent + "." + input_object['name'] + ".value:\n"
             else:
                 if parent == "":
                     output += indent() + "if defined('" + input_object['name'] + ".value'):\n"
@@ -312,16 +285,9 @@ def generate_translation_code(input_object, indent_level=2, parent=""):
             indent_level += 2
             for e in input_object['encodings']:
                 if parent == "":
-                    output += indent() + "facts += \"" + e.replace('X', "daSCASP_\" + urllib.parse.quote_plus(str(" +
-                                                                   input_object[
-                                                                       'name'] + ".value)).replace('%','__perc__').replace('+','__plus__') + \"") + ".\\n\"\n"
+                    output += indent() + "facts += \"" + e.replace('X', "daSCASP_\" + urllib.parse.quote_plus(str(" + input_object['name'] + ".value)).replace('%','__perc__').replace('+','__plus__') + \"") + ".\\n\"\n"
                 else:
-                    output += indent() + "facts += \"" + e.replace('X',
-                                                                   "daSCASP_\" + urllib.parse.quote_plus(str(" + parent + "." +
-                                                                   input_object[
-                                                                       'name'] + ".value)).replace('%','__perc__').replace('+','__plus__') + \"").replace(
-                        'Y',
-                        "daSCASP_\" + urllib.parse.quote_plus(str(" + parent + ".value)).replace('%','__perc__').replace('+','__plus__') + \"") + ".\\n\"\n"
+                    output += indent() + "facts += \"" + e.replace('X', "daSCASP_\" + urllib.parse.quote_plus(str(" + parent + "." + input_object['name'] + ".value)).replace('%','__perc__').replace('+','__plus__') + \"").replace('Y', "daSCASP_\" + urllib.parse.quote_plus(str(" + parent + ".value)).replace('%','__perc__').replace('+','__plus__') + \"") + ".\\n\"\n"
             # if input_object['type'] == "Boolean":
             indent_level -= 2
         if 'attributes' in input_object:
