@@ -1,0 +1,52 @@
+rules: rps.yml
+query: winner(Game,Player)
+data:
+  - name: game
+    type: String
+    minimum: 0
+    encodings:
+      - game(X)
+    attributes:
+      - name: participate_in
+        type: Object
+        minimum: 0
+        encodings:
+          - participate_in(X,Y)
+        source: player
+      - name: winner
+        type: Object
+        minimum: 0
+        encodings:
+          - winner(X,Y)
+        source: player
+  - name: player
+    type: String
+    minimum: 0
+    encodings:
+      - player(X)
+    attributes:
+      - name: throw
+        type: Object
+        minimum: 0
+        encodings:
+          - throw(X,Y)
+        source: sign
+  - name: sign
+    type: Enum
+    options:
+      rock: Rock
+      paper: Paper
+      scissors: Scissors
+    attributes:
+      # There seems to be a test-worthy issue here. 
+      - name: beat
+        type: Object 
+        minimum: 0
+        encodings:
+          - beat(Y,X)
+        source: sign
+terms:
+  - game: |
+      a game of rock-paper-scissors, also known as Rochambeau
+options:
+  show models: True
