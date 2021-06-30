@@ -173,8 +173,7 @@ def generate_parent_values(input_object, parent="", parent_is_list=False, parent
     output += "code: |\n"
     output += "  " + parent + index + dot + input_object['name'] + '.self_value = "' + input_object['name'].replace('_', ' ') + '"\n'
     if parent != "":  # This object has a parent
-        output += "  " + parent + index + dot + input_object['name'] + ".parent_value = " + parent + index + (
-            ".value.value" if parent_is_objref else ".value") + "\n"
+        output += "  " + parent + index + dot + input_object['name'] + ".parent_value = " + parent + index + (".value.value" if parent_is_objref else ".value") + "\n"
     else:
         output += "  " + parent + index + dot + input_object['name'] + ".parent_value = ''\n"
     if is_list(input_object):
@@ -196,8 +195,7 @@ def generate_parent_values(input_object, parent="", parent_is_list=False, parent
             output += "  " + parent + index + dot + input_object['name'] + ".tell = \"" + input_object['tell'].replace('{X}', "\" + " + parent + index + dot + input_object['name'] + (".value.value" if input_object['type'] == 'Object' else ".value") + " + \"").replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
         else:
             output += "---\ncode: |\n"
-            output += "  " + parent + index + dot + input_object['name'] + ".tell = " + parent + index + dot + \
-                      input_object['name'] + (".value.value" if parent_is_objref else ".value") + "\n"
+            output += "  " + parent + index + dot + input_object['name'] + ".tell = " + parent + index + dot + input_object['name'] + (".value.value" if parent_is_objref else ".value") + "\n"
     output += "---\n"
     if is_list(input_object):
         if index == "[i]": nextindex = "[j]"
@@ -209,9 +207,7 @@ def generate_parent_values(input_object, parent="", parent_is_list=False, parent
         output += "  " + parent + index + dot + input_object['name'] + nextindex + '.self_value = "' + input_object[
             'name'].replace('_', ' ') + '"\n'
         if parent != "":  # This object has a parent
-            output += "  " + parent + index + dot + input_object[
-                'name'] + nextindex + ".parent_value = " + parent + index + (
-                          ".value.value" if parent_is_objref else ".value") + '\n'
+            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".parent_value = " + parent + index + (".value.value" if parent_is_objref else ".value") + '\n'
         else:
             output += "  " + parent + index + dot + input_object['name'] + nextindex + ".parent_value = ''\n"
         if 'ask' in input_object:
@@ -480,12 +476,11 @@ def generate_agendas(data_structure, sCASP):
     output = "variable name: agenda\n"
     output += "data:\n"
     # Add agenda here
-    undup_relevant_root = [x for x in relevant_root if
-                           x + " #TARGET" not in relevant_root]  # Leave only the targetted ones if there are duplicates.
-    for rr in list(dict.fromkeys(
-            undup_relevant_root)):  # list(dict.fromkeys(list)) is just a way to remove duplicates and maintain order.
-        output += "  - nav.set_section('" + rr.replace('.gather()', '').replace('.value', '').replace(' #TARGET',
-                                                                                                      '') + "_review')\n"
+    # Leave only the targeted ones if there are duplicates.
+    undup_relevant_root = [x for x in relevant_root if x + " #TARGET" not in relevant_root]
+    # list(dict.fromkeys(list)) is just a way to remove duplicates and maintain order.
+    for rr in list(dict.fromkeys(undup_relevant_root)):
+        output += "  - nav.set_section('" + rr.replace('.gather()', '').replace('.value', '').replace(' #TARGET', '') + "_review')\n"
         output += "  - " + rr + "\n"
     output += "---\n"
     output += "variable name: subagenda\n"
