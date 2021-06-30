@@ -204,8 +204,7 @@ def generate_parent_values(input_object, parent="", parent_is_list=False, parent
         if index == "[l]": nextindex = "[m]"
         if index == "": nextindex = "[i]"
         output += "code: |\n"
-        output += "  " + parent + index + dot + input_object['name'] + nextindex + '.self_value = "' + input_object[
-            'name'].replace('_', ' ') + '"\n'
+        output += "  " + parent + index + dot + input_object['name'] + nextindex + '.self_value = "' + input_object['name'].replace('_', ' ') + '"\n'
         if parent != "":  # This object has a parent
             output += "  " + parent + index + dot + input_object['name'] + nextindex + ".parent_value = " + parent + index + (".value.value" if parent_is_objref else ".value") + '\n'
         else:
@@ -493,9 +492,7 @@ def generate_agendas(data_structure, sCASP):
     # Add sections (done after agenda to get the same ordering)
     output += "sections:\n"
     for d in list(dict.fromkeys(undup_relevant_root)):
-        output += "  - " + d.replace('.gather()', '').replace('.value', '').replace(' #TARGET',
-                                                                                    '') + "_review: " + d.replace(
-            '.gather()', '').replace('.value', '').replace(' #TARGET', '').replace('_', ' ').capitalize() + "\n"
+        output += "  - " + d.replace('.gather()', '').replace('.value', '').replace(' #TARGET', '') + "_review: " + d.replace('.gather()', '').replace('.value', '').replace(' #TARGET', '').replace('_', ' ').capitalize() + "\n"
     output += "  - finished: Finished\n"
     output += "---\n"
 
