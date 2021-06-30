@@ -486,6 +486,7 @@ def generate_agendas(data_structure,sCASP):
     return output
 
 def find_relevant(data_element,relevant_preds,parent="",list_level=0,root=True):
+    new_list=[]
     output = []
     suboutput = []
     if parent == "":
@@ -511,7 +512,7 @@ def find_relevant(data_element,relevant_preds,parent="",list_level=0,root=True):
                     output.append(data_element['source'] + ".gather() #TARGET") #Sources are always root objects.
     if 'attributes' in data_element:
         for a in data_element['attributes']:
-            (new,subnew) = find_relevant(a,relevant_preds,current,new_list,False)
+            (new,subnew) = find_relevant(a,relevant_preds,current,new_list,False) ## Problem: 
             if len(subnew):
                 if root:
                     output.append(parent + dot + data_element['name'] + trailer)

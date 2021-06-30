@@ -38,6 +38,7 @@ data:
       paper: Paper
       scissors: Scissors
     attributes:
+      # There seems to be a test-worthy issue here. 
       - name: beat
         type: Object 
         minimum: 0
