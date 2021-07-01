@@ -472,7 +472,7 @@ def generate_agendas(data_structure,sCASP):
     output += "variable name: subagenda\n"
     output += "data:\n"
     # Add sub-agenda here
-    for rs in set(relevant_sub):
+    for rs in list(dict.fromkeys(relevant_sub)):
         output += "  - " + rs + "\n"
     output += "---\n"
 
