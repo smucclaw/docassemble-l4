@@ -497,7 +497,6 @@ def find_relevant(data_element,relevant_preds,parent="",list_level=0,root=True):
         dot = "."
     if is_list(data_element):
         current += "[" + "ijklm"[list_level] + "]"
-        new_list = list_level + 1
         trailer = ".gather()"
     else:
         trailer = ".value"
@@ -512,7 +511,7 @@ def find_relevant(data_element,relevant_preds,parent="",list_level=0,root=True):
                     output.append(data_element['source'] + ".gather() #TARGET") #Sources are always root objects.
     if 'attributes' in data_element:
         for a in data_element['attributes']:
-            (new,subnew) = find_relevant(a,relevant_preds,current,new_list,False) ## Problem: 
+            (new,subnew) = find_relevant(a,relevant_preds,current,list_level + 1,False) ## Problem:
             if len(subnew):
                 if root:
                     output.append(parent + dot + data_element['name'] + trailer)
