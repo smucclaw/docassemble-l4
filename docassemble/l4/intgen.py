@@ -171,31 +171,19 @@ def generate_parent_values(input_object, parent="", parent_is_list=False, parent
     else:
         index = level
     output += "code: |\n"
-    output += "  " + parent + index + dot + input_object['name'] + '.self_value = "' + input_object['name'].replace('_', ' ') + '"\n'
-    if parent != "":  # This object has a parent
-        output += "  " + parent + index + dot + input_object['name'] + ".parent_value = " + parent + index + (".value.value" if parent_is_objref else ".value") + "\n"
-    else:
-        output += "  " + parent + index + dot + input_object['name'] + ".parent_value = ''\n"
+    qualified_name = parent + index + dot + input_object['name']
+    output += "  " + qualified_name + '.self_value = "' + input_object['name'].replace('_', ' ') + '"\n'
+
+    parent_value = (".value.value" if parent_is_objref else ".value")
+    pv_apx = parent_value_apx(index, parent, parent_value, qualified_name)
+    output += pv_apx
+
     if is_list(input_object):
-        if 'any' in input_object:
-            output += "  " + parent + index + dot + input_object['name'] + ".any = \"" + input_object['any'].replace('{Y}', "\" + " + parent + index + dot + input_object['name'] + ".parent_value + \"") + "\"\n"
-        else:
-            output += "  " + parent + index + dot + input_object['name'] + ".any = \"\"\n"
-        if 'another' in input_object:
-            output += "  " + parent + index + dot + input_object['name'] + ".another = \"" + input_object['another'].replace('{Y}', "\" + " + parent + index + dot + input_object['name'] + ".parent_value + \"") + "\"\n"
-        else:
-            output += "  " + parent + index + dot + input_object['name'] + ".another = \"\"\n"
+        output += append_any_apx(input_object, qualified_name)
+        output += append_another_apx(input_object, qualified_name)
     else:
-        if 'ask' in input_object:
-            output += "  " + parent + index + dot + input_object['name'] + ".ask = \"" + input_object['ask'].replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
-        else:
-            output += "  " + parent + index + dot + input_object['name'] + ".ask = \"\"\n"
-        if 'tell' in input_object:
-            output += "---\ncode: |\n"
-            output += "  " + parent + index + dot + input_object['name'] + ".tell = \"" + input_object['tell'].replace('{X}', "\" + " + parent + index + dot + input_object['name'] + (".value.value" if input_object['type'] == 'Object' else ".value") + " + \"").replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
-        else:
-            output += "---\ncode: |\n"
-            output += "  " + parent + index + dot + input_object['name'] + ".tell = " + parent + index + dot + input_object['name'] + (".value.value" if parent_is_objref else ".value") + "\n"
+        output += append_ask_apx(input_object, index, parent, qualified_name)
+        output += append_tell_apx(input_object, index, parent, parent_value, qualified_name)
     output += "---\n"
     if is_list(input_object):
         if index == "[i]": nextindex = "[j]"
@@ -204,26 +192,91 @@ def generate_parent_values(input_object, parent="", parent_is_list=False, parent
         if index == "[l]": nextindex = "[m]"
         if index == "": nextindex = "[i]"
         output += "code: |\n"
-        output += "  " + parent + index + dot + input_object['name'] + nextindex + '.self_value = "' + input_object['name'].replace('_', ' ') + '"\n'
-        if parent != "":  # This object has a parent
-            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".parent_value = " + parent + index + (".value.value" if parent_is_objref else ".value") + '\n'
-        else:
-            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".parent_value = ''\n"
-        if 'ask' in input_object:
-            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".ask = \"" + input_object['ask'].replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
-        else:
-            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".ask = \"\"\n"
+        output += "  " + qualified_name + nextindex + '.self_value = "' + input_object['name'].replace('_', ' ') + '"\n'
+        output += append_parent_pfx(index, nextindex, parent, parent_value, qualified_name)
+        output += append_ask_index_pfx(input_object, index, nextindex, parent, qualified_name)
         if 'tell' in input_object:
             output += "---\ncode: |\n"
-            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".tell = \"" + input_object['tell'].replace('{X}', "\" + " + parent + index + dot + input_object['name'] + nextindex + (".value.value" if input_object['type'] == 'Object' else ".value") + " + \"").replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
+            output += "  " + qualified_name + nextindex + ".tell = \"" + input_object['tell'].replace('{X}', "\" + " + qualified_name + nextindex + (".value.value" if input_object['type'] == 'Object' else ".value") + " + \"").replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
         else:
             output += "---\ncode: |\n"
-            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".tell = " + parent + index + dot + input_object['name'] + nextindex + (".value.value" if input_object['type'] == 'Object' else ".value") + "\n"
+            output += "  " + qualified_name + nextindex + ".tell = " + qualified_name + nextindex + (".value.value" if input_object['type'] == 'Object' else ".value") + "\n"
         output += "---\n"
     if 'attributes' in input_object:
         for a in input_object['attributes']:
-            output += generate_parent_values(a, parent + index + dot + input_object['name'], is_list(input_object), input_object['type'] == 'Object')
+            output += generate_parent_values(a, qualified_name, is_list(input_object), input_object['type'] == 'Object')
     return output
+
+
+def append_ask_index(index, input_object, nextindex, output, parent, qualified_name):
+    proj = {'ask': input_object.get('ask')}
+    print(f"append_ask_index_pfx(index=<{index}>, input_object=<{proj}>, nextindex=<{nextindex}>, parent=<{parent}>, qualified_name=<{qualified_name}>):")
+    if 'ask' in input_object:
+        output += "  " + qualified_name + nextindex + ".ask = \"" + input_object['ask'].replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
+    else:
+        output += "  " + qualified_name + nextindex + ".ask = \"\"\n"
+    return output
+
+
+def append_tell_apx(input_object, index, parent, parent_value, qualified_name):
+    block_header = "---\ncode: |\n"
+    line_header = f"  {qualified_name}.tell = "
+    if 'tell' in input_object:
+        value_ref_pfx = ".value.value" if input_object['type'] == 'Object' else ".value"
+        value_ref = f'" + {qualified_name}{value_ref_pfx} + "'
+        parent_tell_ref = f'" + {parent}{index}.tell + "'
+        replace_x = input_object['tell'].replace('{X}', value_ref)
+        return block_header + line_header + "\"" + replace_x.replace('{Y}', parent_tell_ref) + "\"\n"
+    else:
+        return block_header + line_header + qualified_name + parent_value + "\n"
+
+
+def append_ask_apx(input_object, index, parent, qualified_name):
+    line_header = "  " + qualified_name + ".ask = \""
+    line_trailer = "\"\n"
+
+    ask_statement = input_object.get('ask', '')
+    line_any_body = ask_statement.replace('{Y}', f'" + {parent}{index}.tell + "')
+
+    return line_header + line_any_body + line_trailer
+
+
+def append_ask_index_pfx(input_object, index, next_index, parent, qualified_name):
+    return append_ask_apx(input_object, index, parent, qualified_name + next_index)
+
+
+def append_another_apx(input_object, qualified_name):
+    line_another_header = "  " + qualified_name + ".another = \""
+    line_another_trailer = "\"\n"
+
+    another_statement = input_object.get('another', '')
+    line_any_body = another_statement.replace('{Y}', f'" + {qualified_name}.parent_value + "')
+
+    return line_another_header + line_any_body + line_another_trailer
+
+
+def append_any_apx(input_object, qualified_name):
+    line_any_header = "  " + qualified_name + ".any = " + "\""
+    line_any_trailer = "\"\n"
+
+    any_statement = input_object.get('any', '')
+    line_any_body = any_statement.replace('{Y}', f'" + {qualified_name}.parent_value + "')
+
+    return line_any_header + line_any_body + line_any_trailer
+
+
+def parent_value_apx(index, parent, line_body, qualified_name):
+    line_header = "  " + qualified_name + ".parent_value = "
+    line_body = parent + index + line_body if parent != "" else "''"
+
+    return line_header + line_body + '\n'
+
+
+def append_parent_pfx(index, next_index, parent, parent_value, qualified_name):
+    line_header = "  " + qualified_name + next_index + ".parent_value = "
+    line_body = parent + index + parent_value if parent != "" else "''"
+
+    return line_header + line_body + '\n'
 
 
 def generate_translation_code(input_object, indent_level=2, parent=""):
