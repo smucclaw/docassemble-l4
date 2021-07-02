@@ -8,7 +8,14 @@ FIXTURE_DIR = os.path.join(
 )
 
 
-def test_generate_interview():
+def test_generate_interview_rsp():
+    with open('test_files/rps.pl') as scasp:
+        with open('test_files/rps.yml') as yml:
+            output = generate_interview(yml.read(), scasp.read())
+            print(output)
+
+
+def test_generate_interview_r34():
     with open('test_files/r34.pl', encoding='utf-8') as scasp:
         with open('test_files/r34.yml', encoding='utf-8') as yml:
             with open('test_files/r34.da.yml', encoding='utf-8') as interview_yml:
