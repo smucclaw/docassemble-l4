@@ -3,48 +3,34 @@ query: winner(Game,Player)
 data:
   - name: game
     type: String
-    minimum: 0
+    exactly: 1
     encodings:
       - game(X)
     attributes:
       - name: participate_in
-        type: Object
-        minimum: 0
+        type: Boolean
         encodings:
-          - participate_in(X,Y)
+          - participate_in(Y,X)
         source: player
       - name: winner
-        type: Object
-        minimum: 0
+        type: Boolean
         encodings:
-          - winner(X,Y)
+          - winner(Y,X)
         source: player
   - name: player
     type: String
-    minimum: 0
+    exactly: 2
     encodings:
       - player(X)
     attributes:
       - name: throw
-        type: Object
-        minimum: 0
+        type: Enum
+        options:
+          rock: Rock
+          paper: Paper
+          scissors: Scissors
         encodings:
-          - throw(X,Y)
-        source: sign
-  - name: sign
-    type: Enum
-    options:
-      rock: Rock
-      paper: Paper
-      scissors: Scissors
-    attributes:
-      # There seems to be a test-worthy issue here. 
-      - name: beat
-        type: Object 
-        minimum: 0
-        encodings:
-          - beat(Y,X)
-        source: sign
+          - throw(Y,X)
 terms:
   - game: |
       a game of rock-paper-scissors, also known as Rochambeau
