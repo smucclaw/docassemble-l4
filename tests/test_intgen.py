@@ -1,5 +1,4 @@
-from docassemble.l4.intgen import parent_value_apx, append_any_apx, append_another_apx, append_ask_apx, append_tell_apx, \
-    append_parent_pfx, append_ask_index_pfx, append_tell_idx, append_tell_idx_apx
+from docassemble.l4.intgen import *
 
 
 def test_append_parent_value_empty():
@@ -158,3 +157,107 @@ code: |
 '''
     assert apx == expected
 
+
+def indent_stub(indent_level):
+    return lambda: " " * indent_level
+
+def test_append_list_header_empty():
+    input_object = {'name': 'legal_practice'}
+    apx = append_list_header_apx(input_object, " " * 2, "")
+    expected = '''  if defined('legal_practice'):
+    for legal_practice_element in legal_practice:\n'''
+    assert apx == expected
+
+
+def test_append_list_header_value():
+    input_object = {'name': 'legal_practitioner'}
+    apx = append_list_header_apx(input_object, " " * 4, "legal_practice_element")
+    expected = '''    if defined('legal_practice_element.legal_practitioner'):
+      for legal_practitioner_element in legal_practice_element.legal_practitioner:\n'''
+    assert apx == expected
+
+
+def test_append_bool_elem_empty():
+    input_object = {'name': 'legal_practice'}
+    apx = append_bool_element_apx(input_object, indent_stub(2)(), "")
+    expected = '''  if defined('legal_practice_element.value') and legal_practice_element.value:\n'''
+    assert apx == expected
+
+
+def test_append_bool_elem_value():
+    input_object = {'name': 'legal_practitioner'}
+    apx = append_bool_element_apx(input_object, indent_stub(4)(), "legal_practice")
+    expected = "    if defined('legal_practice.legal_practitioner_element.value') " \
+               "and legal_practice.legal_practitioner_element.value:\n"
+    assert apx == expected
+
+
+def test_append_var_elem_empty():
+    input_object = {'name': 'legal_practice'}
+    apx = append_var_element_apx(input_object, indent_stub(2)(), "")
+    expected = '''  if defined('legal_practice_element.value'):\n'''
+    assert apx == expected
+
+
+def test_append_var_elem_value():
+    input_object = {'name': 'legal_practitioner'}
+    apx = append_var_element_apx(input_object, indent_stub(4)(), "legal_practice")
+    expected = "    if defined('legal_practice.legal_practitioner_element.value'):\n"
+    assert apx == expected
+
+
+def test_append_facts_elem_empty():
+    input_object = {'name': 'legal_practice'}
+    apx = append_element_facts_apx(input_object, "law_practice(X)", indent_stub(2)(), "")
+    expected = '''  facts += "law_practice(daSCASP_" + urllib.parse.quote_plus(str(legal_practice_element.value)).replace('%','__perc__').replace('+','__plus__') + ").\\n"\n'''
+    assert apx == expected
+
+
+def test_append_facts_elem_value():
+    input_object = {'name': 'provides'}
+    apx = append_element_facts_apx(input_object, "provides(Y,X)", indent_stub(4)(), "organization_element")
+    expected = '''    facts += "provides(daSCASP_" + urllib.parse.quote_plus(str(organization_element.value)).replace('%','__perc__').replace('+','__plus__') + ",daSCASP_" + urllib.parse.quote_plus(str(provides_element.value)).replace('%','__perc__').replace('+','__plus__') + ").\\n"\n'''
+    assert apx == expected
+
+
+def test_append_var_bool_elem_empty():
+    input_object = {'name': 'legal_practice'}
+    apx = append_bool_var_apx(input_object, indent_stub(2)(), "")
+    expected = '''  if defined('legal_practice.value') and legal_practice.value:\n'''
+    assert apx == expected
+
+
+def test_append_var_bool_elem_value():
+    input_object = {'name': 'trade'}
+    apx = append_bool_var_apx(input_object, indent_stub(4)(), "business_element")
+    expected = "    if defined('business_element.trade.value') " \
+               "and business_element.trade.value:\n"
+    assert apx == expected
+
+
+def test_append_var_elem_empty():
+    input_object = {'name': 'legal_practice'}
+    apx = append_var_apx(input_object, indent_stub(2)(), "")
+    expected = '''  if defined('legal_practice.value'):\n'''
+    assert apx == expected
+
+
+def test_append_var_elem_value():
+    input_object = {'name': 'legal_practitioner'}
+    apx = append_var_apx(input_object, indent_stub(4)(), "legal_practice")
+    expected = "    if defined('legal_practice.legal_practitioner.value'):\n"
+    assert apx == expected
+
+
+def test_append_facts_empty():
+    input_object = {'name': 'legal_practice'}
+    apx = append_facts_apx(input_object, "law_practice(X)", indent_stub(2)(), "")
+    expected = '''  facts += "law_practice(daSCASP_" + urllib.parse.quote_plus(str(legal_practice.value)).replace('%','__perc__').replace('+','__plus__') + ").\\n"\n'''
+    assert apx == expected
+
+
+def test_append_facts_value():
+    input_object = {'name': 'provides'}
+    apx = append_facts_apx(input_object, "provides(Y,X)", indent_stub(4)(), "organization_element")
+    expected = '''    facts += "provides(daSCASP_" + urllib.parse.quote_plus(str(organization_element.value)).replace('%','__perc__').replace('+','__plus__') + ",daSCASP_" + urllib.parse.quote_plus(str(organization_element.provides.value)).replace('%','__perc__').replace('+','__plus__') + ").\\n"\n'''
+    assert apx == expected
