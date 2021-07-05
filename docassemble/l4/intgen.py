@@ -195,12 +195,7 @@ def generate_parent_values(input_object, parent="", parent_is_list=False, parent
         output += "  " + qualified_name + nextindex + '.self_value = "' + input_object['name'].replace('_', ' ') + '"\n'
         output += append_parent_pfx(index, nextindex, parent, parent_value, qualified_name)
         output += append_ask_index_pfx(input_object, index, nextindex, parent, qualified_name)
-        if 'tell' in input_object:
-            output += "---\ncode: |\n"
-            output += "  " + qualified_name + nextindex + ".tell = \"" + input_object['tell'].replace('{X}', "\" + " + qualified_name + nextindex + (".value.value" if input_object['type'] == 'Object' else ".value") + " + \"").replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
-        else:
-            output += "---\ncode: |\n"
-            output += "  " + qualified_name + nextindex + ".tell = " + qualified_name + nextindex + (".value.value" if input_object['type'] == 'Object' else ".value") + "\n"
+        output += append_tell_idx_apx(input_object, index, nextindex, parent, qualified_name)
         output += "---\n"
     if 'attributes' in input_object:
         for a in input_object['attributes']:
@@ -208,14 +203,25 @@ def generate_parent_values(input_object, parent="", parent_is_list=False, parent
     return output
 
 
-def append_ask_index(index, input_object, nextindex, output, parent, qualified_name):
-    proj = {'ask': input_object.get('ask')}
+def append_tell_idx(input_object, index, nextindex, parent, qualified_name, output):
+    proj = {'tell': input_object.get('tell')}
     print(f"append_ask_index_pfx(index=<{index}>, input_object=<{proj}>, nextindex=<{nextindex}>, parent=<{parent}>, qualified_name=<{qualified_name}>):")
-    if 'ask' in input_object:
-        output += "  " + qualified_name + nextindex + ".ask = \"" + input_object['ask'].replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
-    else:
-        output += "  " + qualified_name + nextindex + ".ask = \"\"\n"
     return output
+
+
+def append_tell_idx_apx(input_object, index, next_index, parent, qualified_name):
+    block_pfx = "---\ncode: |\n"
+    value_pfx = (".value.value" if input_object['type'] == 'Object' else ".value")
+    line_prefix = "  " + qualified_name + next_index + ".tell = "
+    qname_value_ref = qualified_name + next_index + value_pfx
+
+    if 'tell' in input_object:
+        x_replacement = f'" + {qname_value_ref} + "'
+        x_replaced = input_object['tell'].replace('{X}', x_replacement)
+        y_replacement = f'" + {parent + index}.tell + "'
+        return block_pfx + line_prefix + '"' + x_replaced.replace('{Y}', y_replacement) + "\"\n"
+    else:
+        return block_pfx + line_prefix + qname_value_ref + "\n"
 
 
 def append_tell_apx(input_object, index, parent, parent_value, qualified_name):

@@ -1,5 +1,5 @@
 from docassemble.l4.intgen import parent_value_apx, append_any_apx, append_another_apx, append_ask_apx, append_tell_apx, \
-    append_parent_pfx, append_ask_index, append_ask_index_pfx
+    append_parent_pfx, append_ask_index_pfx, append_tell_idx, append_tell_idx_apx
 
 
 def test_append_parent_value_empty():
@@ -136,3 +136,25 @@ code: |
   {qualified_name}.tell = "prefix" + {qualified_name}.value + "infix" + {parent}[i].tell + "postfix"
 '''
     assert apx == expected
+
+
+def test_append_tell_idx_no_tell():
+    input_object = {'any': 'Are there any positions in {Y}?',
+                    'type': 'str'}
+    qualified_name = "legal_practice[i].position[j].associated_with"
+    apx = append_tell_idx_apx(input_object, "[i]", "[k]", "legal_practice[i].position", qualified_name)
+    assert apx == f"---\ncode: |\n  {qualified_name}[k].tell = {qualified_name}[k].value\n"
+
+
+def test_append_tell_idx_with_tell_and_y():
+    input_object = {'tell': 'prefix{X}infix{Y}postfix',
+                    'type': 'str'}
+    qualified_name = "legal_practice[i].position"
+    parent = "legal_practice"
+    apx = append_tell_idx_apx(input_object, "[i]", "[j]", parent, qualified_name)
+    expected = f'''---
+code: |
+  {qualified_name}[j].tell = "prefix" + {qualified_name}[j].value + "infix" + {parent}[i].tell + "postfix"
+'''
+    assert apx == expected
+
