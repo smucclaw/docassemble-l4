@@ -1,36 +1,35 @@
-rules: rps.yml
+rules: rps.pl
 query: winner(Game,Player)
 data:
-  - name: game
-    type: String
-    exactly: 1
-    encodings:
-      - game(X)
-    attributes:
-      - name: participate_in
-        type: Boolean
-        encodings:
-          - participate_in(Y,X)
-        source: player
-      - name: winner
-        type: Boolean
-        encodings:
-          - winner(Y,X)
-        source: player
   - name: player
     type: String
+    ask: What is the name of the player?
+    another: Is there another player?
     exactly: 2
     encodings:
       - player(X)
     attributes:
       - name: throw
         type: Enum
+        ask: What does {Y} throw?
         options:
           rock: Rock
           paper: Paper
           scissors: Scissors
         encodings:
           - throw(Y,X)
+  - name: game
+    type: String
+    minimum: 0
+    encodings:
+      - game(X)
+    attributes:
+      - name: participate_in
+        type: Object
+        minimum: 0
+        encodings:
+          - participate_in(Y,X)
+        source: player
 terms:
   - game: |
       a game of rock-paper-scissors, also known as Rochambeau

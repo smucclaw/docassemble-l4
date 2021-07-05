@@ -7,11 +7,13 @@
 #pred throw(Player,Sign) :: '@(Player) threw @(Sign)'.
 #pred beat(Sign,OtherSign) :: '@(Sign) beats @(OtherSign)'.
 
-beats(rock,scissors).
-beats(scissors,paper).
-beats(paper,rock).
+% the rock, paper, scissors atoms are encoded directly, and so we append "daSCASP_" as required in docassemble-scasp
+beat(daSCASP_rock,daSCASP_scissors).
+beat(daSCASP_scissors,daSCASP_paper).
+beat(daSCASP_paper,daSCASP_rock).
 
 winner(Game,Player) :-
+  game(Game),
   player(Player),
   player(OtherPlayer),
   participate_in(Game,Player),
@@ -20,3 +22,4 @@ winner(Game,Player) :-
   throw(OtherPlayer,OtherSign),
   beat(Sign,OtherSign),
   Player \= OtherPlayer.
+
