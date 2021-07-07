@@ -139,3 +139,7 @@ cython_debug/
 
 #Pycharm project files
 .idea/
+
+#direnv
+.direnv/
+.envrc
