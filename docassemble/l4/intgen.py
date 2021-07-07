@@ -171,59 +171,117 @@ def generate_parent_values(input_object, parent="", parent_is_list=False, parent
     else:
         index = level
     output += "code: |\n"
-    output += "  " + parent + index + dot + input_object['name'] + '.self_value = "' + input_object['name'].replace('_', ' ') + '"\n'
-    if parent != "":  # This object has a parent
-        output += "  " + parent + index + dot + input_object['name'] + ".parent_value = " + parent + index + (".value.value" if parent_is_objref else ".value") + "\n"
-    else:
-        output += "  " + parent + index + dot + input_object['name'] + ".parent_value = ''\n"
+    qualified_name = parent + index + dot + input_object['name']
+    output += "  " + qualified_name + '.self_value = "' + input_object['name'].replace('_', ' ') + '"\n'
+
+    parent_value = (".value.value" if parent_is_objref else ".value")
+    pv_apx = parent_value_apx(index, parent, parent_value, qualified_name)
+    output += pv_apx
+
     if is_list(input_object):
-        if 'any' in input_object:
-            output += "  " + parent + index + dot + input_object['name'] + ".any = \"" + input_object['any'].replace('{Y}', "\" + " + parent + index + dot + input_object['name'] + ".parent_value + \"") + "\"\n"
-        else:
-            output += "  " + parent + index + dot + input_object['name'] + ".any = \"\"\n"
-        if 'another' in input_object:
-            output += "  " + parent + index + dot + input_object['name'] + ".another = \"" + input_object['another'].replace('{Y}', "\" + " + parent + index + dot + input_object['name'] + ".parent_value + \"") + "\"\n"
-        else:
-            output += "  " + parent + index + dot + input_object['name'] + ".another = \"\"\n"
+        output += append_any_apx(input_object, qualified_name)
+        output += append_another_apx(input_object, qualified_name)
     else:
-        if 'ask' in input_object:
-            output += "  " + parent + index + dot + input_object['name'] + ".ask = \"" + input_object['ask'].replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
-        else:
-            output += "  " + parent + index + dot + input_object['name'] + ".ask = \"\"\n"
-        if 'tell' in input_object:
-            output += "---\ncode: |\n"
-            output += "  " + parent + index + dot + input_object['name'] + ".tell = \"" + input_object['tell'].replace('{X}', "\" + " + parent + index + dot + input_object['name'] + (".value.value" if input_object['type'] == 'Object' else ".value") + " + \"").replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
-        else:
-            output += "---\ncode: |\n"
-            output += "  " + parent + index + dot + input_object['name'] + ".tell = " + parent + index + dot + input_object['name'] + (".value.value" if parent_is_objref else ".value") + "\n"
+        output += append_ask_apx(input_object, index, parent, qualified_name)
+        output += append_tell_apx(input_object, index, parent, parent_value, qualified_name)
     output += "---\n"
     if is_list(input_object):
-        if index == "[i]": nextindex = "[j]"
-        if index == "[j]": nextindex = "[k]"
-        if index == "[k]": nextindex = "[l]"
-        if index == "[l]": nextindex = "[m]"
-        if index == "": nextindex = "[i]"
+        if index == "[i]":
+            nextindex = "[j]"
+        if index == "[j]":
+            nextindex = "[k]"
+        if index == "[k]":
+            nextindex = "[l]"
+        if index == "[l]":
+            nextindex = "[m]"
+        if index == "":
+            nextindex = "[i]"
         output += "code: |\n"
-        output += "  " + parent + index + dot + input_object['name'] + nextindex + '.self_value = "' + input_object['name'].replace('_', ' ') + '"\n'
-        if parent != "":  # This object has a parent
-            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".parent_value = " + parent + index + (".value.value" if parent_is_objref else ".value") + '\n'
-        else:
-            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".parent_value = ''\n"
-        if 'ask' in input_object:
-            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".ask = \"" + input_object['ask'].replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
-        else:
-            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".ask = \"\"\n"
-        if 'tell' in input_object:
-            output += "---\ncode: |\n"
-            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".tell = \"" + input_object['tell'].replace('{X}', "\" + " + parent + index + dot + input_object['name'] + nextindex + (".value.value" if input_object['type'] == 'Object' else ".value") + " + \"").replace('{Y}', "\" + " + parent + index + ".tell + \"") + "\"\n"
-        else:
-            output += "---\ncode: |\n"
-            output += "  " + parent + index + dot + input_object['name'] + nextindex + ".tell = " + parent + index + dot + input_object['name'] + nextindex + (".value.value" if input_object['type'] == 'Object' else ".value") + "\n"
+        output += "  " + qualified_name + nextindex + '.self_value = "' + input_object['name'].replace('_', ' ') + '"\n'
+        output += append_parent_pfx(index, nextindex, parent, parent_value, qualified_name)
+        output += append_ask_index_pfx(input_object, index, nextindex, parent, qualified_name)
+        output += append_tell_idx_apx(input_object, index, nextindex, parent, qualified_name)
         output += "---\n"
     if 'attributes' in input_object:
         for a in input_object['attributes']:
-            output += generate_parent_values(a, parent + index + dot + input_object['name'], is_list(input_object), input_object['type'] == 'Object')
+            output += generate_parent_values(a, qualified_name, is_list(input_object), input_object['type'] == 'Object')
     return output
+
+
+def append_tell_idx_apx(input_object, index, next_index, parent, qualified_name):
+    block_pfx = "---\ncode: |\n"
+    value_pfx = (".value.value" if input_object['type'] == 'Object' else ".value")
+    line_prefix = "  " + qualified_name + next_index + ".tell = "
+    qname_value_ref = qualified_name + next_index + value_pfx
+
+    if 'tell' in input_object:
+        x_replacement = f'" + {qname_value_ref} + "'
+        x_replaced = input_object['tell'].replace('{X}', x_replacement)
+        y_replacement = f'" + {parent + index}.tell + "'
+        return block_pfx + line_prefix + '"' + x_replaced.replace('{Y}', y_replacement) + "\"\n"
+    else:
+        return block_pfx + line_prefix + qname_value_ref + "\n"
+
+
+def append_tell_apx(input_object, index, parent, parent_value, qualified_name):
+    block_header = "---\ncode: |\n"
+    line_header = f"  {qualified_name}.tell = "
+    if 'tell' in input_object:
+        value_ref_pfx = ".value.value" if input_object['type'] == 'Object' else ".value"
+        value_ref = f'" + {qualified_name}{value_ref_pfx} + "'
+        parent_tell_ref = f'" + {parent}{index}.tell + "'
+        replace_x = input_object['tell'].replace('{X}', value_ref)
+        return block_header + line_header + "\"" + replace_x.replace('{Y}', parent_tell_ref) + "\"\n"
+    else:
+        return block_header + line_header + qualified_name + parent_value + "\n"
+
+
+def append_ask_apx(input_object, index, parent, qualified_name):
+    line_header = "  " + qualified_name + ".ask = \""
+    line_trailer = "\"\n"
+
+    ask_statement = input_object.get('ask', '')
+    line_any_body = ask_statement.replace('{Y}', f'" + {parent}{index}.tell + "')
+
+    return line_header + line_any_body + line_trailer
+
+
+def append_ask_index_pfx(input_object, index, next_index, parent, qualified_name):
+    return append_ask_apx(input_object, index, parent, qualified_name + next_index)
+
+
+def append_another_apx(input_object, qualified_name):
+    line_another_header = "  " + qualified_name + ".another = \""
+    line_another_trailer = "\"\n"
+
+    another_statement = input_object.get('another', '')
+    line_any_body = another_statement.replace('{Y}', f'" + {qualified_name}.parent_value + "')
+
+    return line_another_header + line_any_body + line_another_trailer
+
+
+def append_any_apx(input_object, qualified_name):
+    line_any_header = "  " + qualified_name + ".any = " + "\""
+    line_any_trailer = "\"\n"
+
+    any_statement = input_object.get('any', '')
+    line_any_body = any_statement.replace('{Y}', f'" + {qualified_name}.parent_value + "')
+
+    return line_any_header + line_any_body + line_any_trailer
+
+
+def parent_value_apx(index, parent, line_body, qualified_name):
+    line_header = "  " + qualified_name + ".parent_value = "
+    line_body = parent + index + line_body if parent != "" else "''"
+
+    return line_header + line_body + '\n'
+
+
+def append_parent_pfx(index, next_index, parent, parent_value, qualified_name):
+    line_header = "  " + qualified_name + next_index + ".parent_value = "
+    line_body = parent + index + parent_value if parent != "" else "''"
+
+    return line_header + line_body + '\n'
 
 
 def generate_translation_code(input_object, indent_level=2, parent=""):
@@ -235,30 +293,16 @@ def generate_translation_code(input_object, indent_level=2, parent=""):
 
     # output += indent() + "# Regarding " + input_object['name'] + "\n"
     if is_list(input_object):
-        if parent == "":  # This is a root list
-            output += indent() + "if defined('" + input_object['name'] + "'):\n"
-            output += indent() + "  for " + input_object['name'] + "_element in " + input_object['name'] + ":\n"
-        else:  # This is a non-root list
-            output += indent() + "if defined('" + parent + "." + input_object['name'] + "'):\n"
-            output += indent() + "  for " + input_object['name'] + "_element in " + parent + "." + input_object['name'] + ":\n"
+        output += append_list_header_apx(input_object, indent(), parent)
         indent_level += 4
         if 'encodings' in input_object:
             if input_object['type'] == "Boolean":
-                if parent == "" or parent.endswith("_element"):
-                    output += indent() + "if defined('" + input_object['name'] + "_element.value') and " + input_object['name'] + "_element.value:\n"
-                else:
-                    output += indent() + "if defined('" + parent + "." + input_object['name'] + "_element.value') and " + parent + "." + input_object['name'] + "_element.value:\n"
+                output += append_bool_element_apx(input_object, indent(), parent)
             else:
-                if parent == "" or parent.endswith("_element"):
-                    output += indent() + "if defined('" + input_object['name'] + "_element.value'):\n"
-                else:
-                    output += indent() + "if defined('" + parent + "." + input_object['name'] + "_element.value'):\n"  # THIS IS THE PROBLEM
+                output += append_var_element_apx(input_object, indent(), parent)  # There is a problem inside
             indent_level += 2
             for e in input_object['encodings']:
-                if parent == "":
-                    output += indent() + "facts += \"" + e.replace('X', "daSCASP_\" + urllib.parse.quote_plus(str(" + input_object['name'] + "_element.value)).replace('%','__perc__').replace('+','__plus__') + \"") + ".\\n\"\n"
-                else:
-                    output += indent() + "facts += \"" + e.replace('X', "daSCASP_\" + urllib.parse.quote_plus(str(" + input_object['name'] + "_element.value)).replace('%','__perc__').replace('+','__plus__') + \"").replace('Y', "daSCASP_\" + urllib.parse.quote_plus(str(" + parent + ".value)).replace('%','__perc__').replace('+','__plus__') + \"") + ".\\n\"\n"
+                output += append_element_facts_apx(input_object, e, indent(), parent)
             # if input_object['type'] == "Boolean": # we are now indenting for everything.
             indent_level -= 2
         if 'attributes' in input_object:
@@ -268,21 +312,12 @@ def generate_translation_code(input_object, indent_level=2, parent=""):
     else:  # This is not a list.
         if 'encodings' in input_object:
             if input_object['type'] == "Boolean":
-                if parent == "":
-                    output += indent() + "if defined('" + input_object['name'] + ".value') and " + input_object['name'] + ".value:\n"
-                else:
-                    output += indent() + "if defined('" + parent + "." + input_object['name'] + ".value') and " + parent + "." + input_object['name'] + ".value:\n"
+                output += append_bool_var_apx(input_object, indent(), parent)
             else:
-                if parent == "":
-                    output += indent() + "if defined('" + input_object['name'] + ".value'):\n"
-                else:
-                    output += indent() + "if defined('" + parent + "." + input_object['name'] + ".value'):\n"
+                output = append_var_apx(input_object, indent(), parent)
             indent_level += 2
             for e in input_object['encodings']:
-                if parent == "":
-                    output += indent() + "facts += \"" + e.replace('X', "daSCASP_\" + urllib.parse.quote_plus(str(" + input_object['name'] + ".value)).replace('%','__perc__').replace('+','__plus__') + \"") + ".\\n\"\n"
-                else:
-                    output += indent() + "facts += \"" + e.replace('X', "daSCASP_\" + urllib.parse.quote_plus(str(" + parent + "." + input_object['name'] + ".value)).replace('%','__perc__').replace('+','__plus__') + \"").replace('Y', "daSCASP_\" + urllib.parse.quote_plus(str(" + parent + ".value)).replace('%','__perc__').replace('+','__plus__') + \"") + ".\\n\"\n"
+                output += append_facts_apx(input_object, e, indent(), parent)
             # if input_object['type'] == "Boolean":
             indent_level -= 2
         if 'attributes' in input_object:
@@ -292,6 +327,105 @@ def generate_translation_code(input_object, indent_level=2, parent=""):
                 else:
                     output += generate_translation_code(a, indent_level, parent + "." + input_object['name'])
     return output
+
+
+def append_facts(input_object, e, indent, parent, output):
+    url_quote = "urllib.parse.quote_plus"
+    replacements = "replace('%','__perc__').replace('+','__plus__')"
+    if parent == "":
+        x_replacement = f'''daSCASP_" + {url_quote}(str({input_object['name']}.value)).{replacements} + "'''
+        facts = 'facts += "' + e.replace('X', x_replacement) + ".\\n\"\n"
+        output += indent() + facts
+    else:
+        var_name = parent + "." + input_object['name']
+        x_replacement = f'''daSCASP_" + {url_quote}(str({var_name}.value)).{replacements} + "'''
+        y_replacement = f'''daSCASP_" + {url_quote}(str({parent}.value)).{replacements} + "'''
+        facts = 'facts += "' + e.replace('X', x_replacement).replace('Y', y_replacement) + ".\\n\"\n"
+        output += indent() + facts
+    return output
+
+
+def append_facts_apx(input_object, e, indent: str, parent: str):
+    url_quote = "urllib.parse.quote_plus"
+    replacements = "replace('%','__perc__').replace('+','__plus__')"
+    if parent == "":
+        x_replacement = f'''daSCASP_" + {url_quote}(str({input_object['name']}.value)).{replacements} + "'''
+        facts = 'facts += "' + e.replace('X', x_replacement) + ".\\n\"\n"
+    else:
+        var_name = parent + "." + input_object['name']
+        x_replacement = f'''daSCASP_" + {url_quote}(str({var_name}.value)).{replacements} + "'''
+        y_replacement = f'''daSCASP_" + {url_quote}(str({parent}.value)).{replacements} + "'''
+        facts = 'facts += "' + e.replace('X', x_replacement).replace('Y', y_replacement) + ".\\n\"\n"
+    return indent + facts
+
+
+def append_element_facts_apx(input_object, e: str, indent: str, parent: str) -> str:
+    replacements = "replace('%','__perc__').replace('+','__plus__')"
+    url_quote = "urllib.parse.quote_plus"
+    x_replacement = f'''daSCASP_" + {url_quote}(str({input_object['name']}_element.value)).{replacements} + "'''
+    y_replacement = f'''daSCASP_" + {url_quote}(str({parent}.value)).{replacements} + "'''
+
+    if parent == "":
+        facts = e.replace('X', x_replacement)
+    else:
+        facts = e.replace('X', x_replacement).replace('Y', y_replacement)
+
+    return indent + "facts += \"" + facts + ".\\n\"\n"
+
+
+def append_var_element_apx(input_object, indent: str, parent: str) -> str:
+    if parent == "" or parent.endswith("_element"):
+        var_name = input_object['name'] + "_element.value"
+    else:
+        # THIS IS THE PROBLEM
+        var_name = parent + "." + input_object['name'] + "_element.value"
+    return indent + "if defined('" + var_name + "'):\n"
+
+
+def append_var(input_object, indent, parent, output):
+    if parent == "":
+        var_name = input_object['name'] + ".value"
+    else:
+        var_name = parent + "." + input_object['name'] + ".value"
+
+    output += indent() + "if defined('" + var_name + "'):\n"
+    return output
+
+
+def append_var_apx(input_object, indent: str, parent: str) -> str:
+    if parent == "":
+        var_name = input_object['name'] + ".value"
+    else:
+        var_name = parent + "." + input_object['name'] + ".value"
+
+    return indent + "if defined('" + var_name + "'):\n"
+
+
+def append_bool_element_apx(input_object, indent: str, parent: str) -> str:
+    if parent == "" or parent.endswith("_element"):
+        bool_var = input_object['name'] + "_element.value"
+    else:
+        bool_var = parent + "." + input_object['name'] + "_element.value"
+    return indent + f"if defined('{bool_var}') and {bool_var}:\n"
+
+
+def append_bool_var_apx(input_object, indent: str, parent: str) -> str:
+    if parent == "":
+        bool_var_name = input_object['name'] + ".value"
+    else:
+        bool_var_name = parent + "." + input_object['name'] + ".value"
+
+    return indent + f"if defined('{bool_var_name}') and {bool_var_name}:\n"
+
+
+def append_list_header_apx(input_object, indent, parent):
+    it_element_name = input_object['name'] + "_element"
+
+    container_name = input_object['name'] if parent == "" else parent + "." + input_object['name']
+
+    guard_line = indent + f"if defined('{container_name}'):\n"
+    for_line = indent + f"  for {it_element_name} in {container_name}:\n"
+    return guard_line + for_line
 
 
 def make_complete_code_block(input_object, root=""):
@@ -479,7 +613,10 @@ def generate_agendas(data_structure, sCASP):
     undup_relevant_root = [x for x in relevant_root if x + " #TARGET" not in relevant_root]
     # list(dict.fromkeys(list)) is just a way to remove duplicates and maintain order.
     for rr in list(dict.fromkeys(undup_relevant_root)):
-        output += "  - nav.set_section('" + rr.replace('.gather()', '').replace('.value', '').replace(' #TARGET', '') + "_review')\n"
+        without_gather = rr.replace('.gather()', '')
+        without_value = without_gather.replace('.value', '')
+        cleaned_rr = without_value.replace(' #TARGET', '')
+        output += "  - nav.set_section('" + cleaned_rr + "_review')\n"
         output += "  - " + rr + "\n"
     output += "---\n"
     output += "variable name: subagenda\n"
@@ -492,7 +629,10 @@ def generate_agendas(data_structure, sCASP):
     # Add sections (done after agenda to get the same ordering)
     output += "sections:\n"
     for d in list(dict.fromkeys(undup_relevant_root)):
-        output += "  - " + d.replace('.gather()', '').replace('.value', '').replace(' #TARGET', '') + "_review: " + d.replace('.gather()', '').replace('.value', '').replace(' #TARGET', '').replace('_', ' ').capitalize() + "\n"
+        without_gather = d.replace('.gather()', '')
+        without_value = without_gather.replace('.value', '')
+        cleaned_d = without_value.replace(' #TARGET', '')
+        output += "  - " + cleaned_d + "_review: " + cleaned_d.replace('_', ' ').capitalize() + "\n"
     output += "  - finished: Finished\n"
     output += "---\n"
 
