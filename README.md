@@ -40,14 +40,14 @@ You can also access that functionality in a friendlier interface by running the 
 which accepts a LExSIS file and an s(CASP) file from the current user's playground static folder.
 
 
-### Drafting interview generator files:  
+#### Drafting interview generator files:  
 - [s(CASP) example files](https://gitlab.software.imdea.org/ciao-lang/sCASP/-/tree/master/examples)
 - [LExSIS Documentation](https://github.com/smucclaw/complaw/blob/primary/Publications/Documentation/LExSIS_Documentation.md)
 
 It should be noted that drafting an s(CASP) file to be used for the interview generator is slightly different. Particularly, one does not include a model-finding query within the s(CASP) file, but instead adds it to the LExSIS file under the `query` header-value pair instead. For an example, see the treatment of a "Rock Paper Scissors" scenario from a [pure s(CASP)](https://medium.com/computational-law-diary/how-rules-as-code-makes-laws-better-115ab62ab6c4) perspective vs the [interview generation](https://github.com/smucclaw/docassemble-l4/blob/main/docassemble/l4/data/static/rps.pl) perspective.   
 
 ## Contributing
-### What should I read to understand what's happening?
+#### What should I read to understand what's happening?
 If you've never used [docassemble](https://docassemble.org/docs/helloworld.html) before, we highly suggest that you familiarize yourself with it before proceeding.
 
 Once you've got an idea of what docassemble does & how it works, we recommend you read the following articles:
@@ -59,6 +59,8 @@ After reading the above, familiarize yourself with the package.
   - the user-facing interview generator is in [intgen.yml](https://github.com/smucclaw/docassemble-l4/blob/main/docassemble/l4/data/questions/intgen.yml)
 
 
-### Developer workflow
+#### Developer Workflow
+We use [pipenv](https://pipenv.pypa.io/en/latest/) to manage dependencies, and [pytest](https://docs.pytest.org/) to handle tests. 
+
 
 
