@@ -12,37 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
     - name: Install dependencies.
-      # You may pin to the exact commit or the version.
-      # uses: ivanklee86/python_pipenv_action@5b420560d3d30aedc535b604c59add1888da39f2
-      uses: ivanklee86/python_pipenv_action@master
-      with: 
-        entrypoint: pipenv
-        args: install
-    - name: Run tests
-      uses: ivanklee86/python_pipenv_action@master
+      uses: VaultVulp/action-pipenv@v2.0.1
       with:
         entrypoint: pipenv
-        args: run pytest 
-
-
-#    - uses: actions/checkout@v2
-#    - name: Set up Python 3.9
-#      uses: actions/setup-python@v2
-      #with:
-        #python-version: 3.9
-    #- name: Install dependencies
-      #run: |
-        #python -m pip install --upgrade pip
-        #pip install flake8 pytest
-        #if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    #- name: Lint with flake8
-      #run: |
-        ## stop the build if there are Python syntax errors or undefined names
-        #flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        ## exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        #flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    #- name: Test with pytest
-      #run: |
-        #pytest
+        args: install
+    - name: Run tests.
+      uses: VaultVulp/action-pipenv@v2.0.1
+      with:
+        entrypoint: pipenv
+        args: run pytest
