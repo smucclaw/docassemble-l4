@@ -15,10 +15,8 @@ jobs:
     - name: Install dependencies.
       uses: VaultVulp/action-pipenv@v2.0.1
       with:
-        entrypoint: pipenv
-        args: install
+        command: pipenv install
     - name: Run tests.
       uses: VaultVulp/action-pipenv@v2.0.1
       with:
-        entrypoint: pipenv
-        args: run pytest
+        command: pipenv run pytest
