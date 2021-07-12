@@ -1,0 +1,145 @@
+include:
+  - docassemble.l4:l4.yml
+---
+modules:
+  - docassemble.datatypes.DADataType
+---
+features:
+  navigation: True
+---
+mandatory: True 
+code: |
+  ruleSource = user_info().package + ":rps.pl"
+  query = "winner(Game,Player)."
+  show_models = True
+---
+terms:
+- game: 'a game of rock-paper-scissors, also known as Rochambeau
+
+    '
+---
+objects:
+  - player: |
+      DAList.using(object_type=DADTString,target_number=2,ask_number=True,complete_attribute="complete")
+  - player[i].throw: |
+      DADTEnum.using(options={'rock': 'Rock', 'paper': 'Paper', 'scissors': 'Scissors'})
+  - game: |
+      DAList.using(object_type=DADTString,minimum=0,complete_attribute="complete")
+  - game[i].participate_in: |
+      DAList.using(object_type=DADTObjectRef.using(source=player),minimum=0,complete_attribute="complete")
+---
+code: |
+  player[i].value
+  if "player[i].throw.value" in subagenda:
+    player[i].throw.value
+  player[i].complete =  True
+---
+code: |
+  game[i].value
+  if "game[i].participate_in.gather()" in subagenda:
+    game[i].participate_in.gather()
+  game[i].complete =  True
+---
+code: |
+  game[i].participate_in[j].value
+  game[i].participate_in[j].complete =  True
+---
+code: |
+  import urllib
+  facts = ""
+  if defined('player'):
+    for player_element in player:
+      if defined('player_element.value'):
+        facts += "player(daSCASP_" + urllib.parse.quote_plus(str(player_element.value)).replace('%','__perc__').replace('+','__plus__') + ").\n"
+      if defined('player_element.throw.value'):
+        facts += "throw(daSCASP_" + urllib.parse.quote_plus(str(player_element.value)).replace('%','__perc__').replace('+','__plus__') + ",daSCASP_" + urllib.parse.quote_plus(str(player_element.throw.value)).replace('%','__perc__').replace('+','__plus__') + ").\n"
+      pass # to end empty for loops
+  if defined('game'):
+    for game_element in game:
+      if defined('game_element.value'):
+        facts += "game(daSCASP_" + urllib.parse.quote_plus(str(game_element.value)).replace('%','__perc__').replace('+','__plus__') + ").\n"
+      if defined('game_element.participate_in'):
+        for participate_in_element in game_element.participate_in:
+          if defined('participate_in_element.value'):
+            facts += "participate_in(daSCASP_" + urllib.parse.quote_plus(str(game_element.value)).replace('%','__perc__').replace('+','__plus__') + ",daSCASP_" + urllib.parse.quote_plus(str(participate_in_element.value)).replace('%','__perc__').replace('+','__plus__') + ").\n"
+          pass # to end empty for loops
+      pass # to end empty for loops
+---
+code: |
+  player.self_value = "player"
+  player.parent_value = ''
+  player.any = ""
+  player.another = "Is there another player?"
+---
+code: |
+  player[i].self_value = "player"
+  player[i].parent_value = ''
+  player[i].ask = "What is the name of the player?"
+---
+code: |
+  player[i].tell = player[i].value
+---
+code: |
+  player[i].throw.self_value = "throw"
+  player[i].throw.parent_value = player[i].value
+  player[i].throw.ask = "What does " + player[i].tell + " throw?"
+---
+code: |
+  player[i].throw.tell = player[i].throw.value
+---
+code: |
+  game.self_value = "game"
+  game.parent_value = ''
+  game.any = ""
+  game.another = ""
+---
+code: |
+  game[i].self_value = "game"
+  game[i].parent_value = ''
+  game[i].ask = ""
+---
+code: |
+  game[i].tell = game[i].value
+---
+code: |
+  game[i].participate_in.self_value = "participate in"
+  game[i].participate_in.parent_value = game[i].value
+  game[i].participate_in.any = ""
+  game[i].participate_in.another = ""
+---
+code: |
+  game[i].participate_in[j].self_value = "participate in"
+  game[i].participate_in[j].parent_value = game[i].value
+  game[i].participate_in[j].ask = ""
+---
+code: |
+  game[i].participate_in[j].tell = game[i].participate_in[j].value.value
+---
+variable name: agenda
+data:
+  - nav.set_section('player_review')
+  - player.gather() #TARGET
+  - nav.set_section('game_review')
+  - game.gather()
+---
+variable name: subagenda
+data:
+  - player[i].throw.value
+  - game[i].participate_in.gather()
+---
+sections:
+  - player_review: Player
+  - game_review: Game
+  - finished: Finished
+---
+mandatory: True
+code: |
+  for a in agenda:
+    exec(a)
+---
+mandatory: True
+section: Finished
+question: Finished
+subquestion: |
+  ${ DAScasp_show_answers }
+---
