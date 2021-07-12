@@ -8,7 +8,6 @@ pyyaml = "*"
 pytest = "*"
 networkx = "*"
 "docassemble.scasp" = {editable = true, git = "https://github.com/smucclaw/docassemble-scasp.git"}
-flake8 = "*"
 
 [dev-packages]
 flake8 = "*"
