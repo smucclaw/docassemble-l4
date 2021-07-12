@@ -16,7 +16,9 @@ jobs:
       uses: VaultVulp/action-pipenv@v2.0.1
       with:
         # pipenv command and its argument to be executed
-        command: pipenv install; pipenv run pytest
+        command: |
+          pipenv install 
+          pipenv run pytest
 #    - uses: actions/checkout@v2
 #    - name: Set up Python 3.9
 #      uses: actions/setup-python@v2
