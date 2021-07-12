@@ -1,4 +1,4 @@
-name: Python application
+name: on_mainpush_or_pr 
 
 on:
   push:
@@ -7,18 +7,26 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  test:
 
     runs-on: ubuntu-latest
 
     steps:
-    - name: Pipenv for Github Actions
-      uses: VaultVulp/action-pipenv@v2.0.1
+    - uses: actions/checkout@v2
+    - name: Install dependencies.
+      # You may pin to the exact commit or the version.
+      # uses: ivanklee86/python_pipenv_action@5b420560d3d30aedc535b604c59add1888da39f2
+      uses: ivanklee86/python_pipenv_action@master
+      with: 
+        entrypoint: pipenv
+        args: install
+    - name: Run tests
+      uses: ivanklee86/python_pipenv_action@master
       with:
-        # pipenv command and its argument to be executed
-        command: |
-          pipenv install 
-          pipenv run pytest
+        entrypoint: pipenv
+        args: run pytest 
+
+
 #    - uses: actions/checkout@v2
 #    - name: Set up Python 3.9
 #      uses: actions/setup-python@v2
