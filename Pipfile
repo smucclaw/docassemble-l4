@@ -6,8 +6,8 @@ name = "pypi"
 [packages]
 pyyaml = "*"
 pytest = "*"
-"docassemble.scasp" = {path = "./../docassemble-scasp"}
 networkx = "*"
+"docassemble.scasp" = {editable = true, git = "https://github.com/smucclaw/docassemble-scasp.git"}
 
 [dev-packages]
 flake8 = "*"
