@@ -53,11 +53,12 @@ If you've never used [docassemble](https://docassemble.org/docs/helloworld.html)
 Once you've got an idea of what docassemble does & how it works, we recommend you read the following articles:
   - [Docassemble package management](https://docassemble.org/docs/packages.html)
   - [DAObject](https://docassemble.org/docs/objects.html#DAObject)
+  - [Generic Objects in docassemble](https://docassemble.org/docs/modifiers.html#generic%20object) 
 
 After reading the above, familiarize yourself with the package. 
   - the bulk of the logic is located in [intgen.py](https://github.com/smucclaw/docassemble-l4/blob/main/docassemble/l4/intgen.py)
   - the user-facing interview generator is in [intgen.yml](https://github.com/smucclaw/docassemble-l4/blob/main/docassemble/l4/data/questions/intgen.yml)
-
+  - the question defaults for the various datatypes used [l4.yml](https://github.com/smucclaw/docassemble-l4/blob/main/docassemble/l4/data/questions/l4.yml)
 
 #### Developer Workflow
 We use [pipenv](https://pipenv.pypa.io/en/latest/) to manage dependencies, and [pytest](https://docs.pytest.org/) to handle tests. 
