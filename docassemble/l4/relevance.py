@@ -19,14 +19,21 @@ import string
 import re
 
 def relevant_to(scasp_code,query):
+    # Build a directed graph
     dg = build_graph(scasp_code)
     # First, strip legally_holds or according_to from query, so it is
     # searching for a term that exists in the graph.
     query_parse = sp.term.parseString(query,True)
+    # If query has "according_to" or "legally_holds", take the 2nd argument to the base atom.
+    # eg. legally_holds(A, must_not(A,accept,B))   --->  must_not(A,accept,B)
     if query_parse['term']['functor']['base atom'] in ['according_to','legally_holds']:
         query_parse = query_parse['term']['arguments'][1]
+    # generalize(query_parse) transforms the parsed query, back into original sCASP encoding
+    # descendants returns a set of all reachable nodes from the queried source node
     relevant = nx.descendants(dg,generalize(query_parse))
+    
     leaves = set()
+    # This for-loop prunes non-leaf nodes i.e. anything that not a fact
     for r in relevant:
         if not nx.descendants(dg,r):
             leaves.add(r)
